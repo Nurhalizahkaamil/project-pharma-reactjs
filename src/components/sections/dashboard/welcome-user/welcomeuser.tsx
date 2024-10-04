@@ -10,13 +10,13 @@ const WelcomeUser = () => {
       {/* Card untuk teks sapaan */}
       <Card
         sx={{
-          background: 'linear-gradient(90deg, #08B6AB 18%, #08B6AB 61%, #156984 100%)',
+          background: 'linear-gradient(135deg, #08B6AB 18%, #0F8A95 61%, #156984 100%)',
           borderRadius: '10px',
           color: 'white',
           mb: -3,
           mt: 7,
           position: 'relative', // Menetapkan posisi relative agar gambar bisa di-absolute di sekitarnya
-          width: { xs: '100%', md: '100%', lg: '100%' }, // Width responsif
+          width: { xs: '100%', md: '100%', lg: '92%' }, // Width responsif
           mx: 'auto', // Untuk membuat card berada di tengah secara horizontal
           overflow: 'visible', // Agar gambar di luar tidak terpotong
         }}
@@ -41,9 +41,9 @@ const WelcomeUser = () => {
           sx={{
             position: 'absolute',
             top: '35%', // Posisi vertikal gambar
-            right: '-50px', // Gambar berada di luar card secara horizontal
+            right: '-85px', // Gambar berada di luar card secara horizontal
             transform: 'translateY(-50%)', // Untuk memastikan gambar berada di tengah secara vertikal
-            width: { xs: '250px', md: '200px', lg: '325px' }, // Responsif berdasarkan ukuran layar
+            width: { xs: '250px', md: '200px', lg: '335px' }, // Responsif berdasarkan ukuran layar
             height: 'auto',
             opacity: 0.9,
           }}

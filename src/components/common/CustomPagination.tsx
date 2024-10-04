@@ -1,4 +1,4 @@
-import { Typography, Stack, Pagination } from '@mui/material';
+import { Typography, Stack, Pagination, PaginationItem } from '@mui/material';
 import {
   gridPageSelector,
   gridPageCountSelector,
@@ -9,6 +9,18 @@ import {
 } from '@mui/x-data-grid';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { MutableRefObject } from 'react';
+import { styled } from '@mui/system';
+
+// Styled pagination button with green color
+const StyledPaginationItem = styled(PaginationItem)(({ theme }) => ({
+  borderRadius: '50%',
+  border: `1px solid #76C893`,
+  '&.Mui-selected': {
+    backgroundColor: '#76C893',
+    color: theme.palette.common.white,
+    boxShadow: '12px #76C893',
+  },
+}));
 
 const CustomPagination = ({ apiRef }: { apiRef: MutableRefObject<GridApiCommunity> }) => {
   const page = useGridSelector(apiRef, gridPageSelector);
@@ -26,17 +38,16 @@ const CustomPagination = ({ apiRef }: { apiRef: MutableRefObject<GridApiCommunit
 
   return (
     <Stack
-      direction={{ xs: 'column', sm: 'row' }}
+      direction="row"
       alignItems="center"
       justifyContent="flex-end"
-      gap={{ xs: 1, sm: 3 }}
+      gap={2}
       sx={{ width: 1, overflow: 'auto' }}
     >
       <Typography variant="subtitle2" color="grey.600">
         {`Showing ${from}-${to} of ${filteredRows}`}
       </Typography>
       <Pagination
-        color="primary"
         size="medium"
         count={pageCount}
         page={page + 1}
@@ -44,6 +55,7 @@ const CustomPagination = ({ apiRef }: { apiRef: MutableRefObject<GridApiCommunit
           event.preventDefault();
           apiRef.current.setPage(value - 1);
         }}
+        renderItem={(item) => <StyledPaginationItem {...item} />}
       />
     </Stack>
   );

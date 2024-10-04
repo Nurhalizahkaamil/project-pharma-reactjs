@@ -6,7 +6,7 @@ import Footer from './footer/Footer';
 
 const drawerWidth = 260;
 
-const MainLayout = ({ children }: PropsWithChildren) => {
+const MainLayout = ({ children, title }: PropsWithChildren<{ title: string }>) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -27,7 +27,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <Stack direction="row">
-      <Topbar drawerWidth={drawerWidth} onHandleDrawerToggle={handleDrawerToggle} />
+      <Topbar drawerWidth={drawerWidth} onHandleDrawerToggle={handleDrawerToggle} title={title} />
 
       <VerticalNavbar
         drawerWidth={drawerWidth}

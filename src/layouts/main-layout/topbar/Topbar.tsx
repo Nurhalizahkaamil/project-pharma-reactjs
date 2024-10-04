@@ -1,12 +1,12 @@
 import { AppBar, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import sitemap from 'routes/sitemap';
+import sitemap, { MenuItem } from 'routes/sitemap'; // Make sure to import the MenuItem type
 import IconifyIcon from 'components/base/IconifyIcon';
 import Search from 'components/common/Search';
 import ElevationScroll from './ElevationScroll';
 import AccountDropdown from './AccountDropdown';
-import SettingsMenu from './SettingsMenu'; // renamed component
+import SettingsMenu from './SettingsMenu';
 import Notification from './Notification';
 
 interface TopbarProps {
@@ -18,8 +18,21 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle }: TopbarProps) => {
   const location = useLocation();
 
   const pageTitle = useMemo(() => {
-    const navItem = sitemap.find((navItem) => location.pathname === navItem.path);
-    return navItem!.name;
+    const findPageTitle = (items: MenuItem[]): string => {
+      // Specify the return type as string
+      for (const item of items) {
+        if (item.path === location.pathname) {
+          return item.name;
+        }
+        if (item.items) {
+          const nestedTitle: string | undefined = findPageTitle(item.items); // Explicitly define the type
+          if (nestedTitle) return nestedTitle;
+        }
+      }
+      return '';
+    };
+
+    return findPageTitle(sitemap);
   }, [location]);
 
   return (
@@ -30,7 +43,7 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle }: TopbarProps) => {
           width: { lg: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
           height: '90px',
-          bgcolor: 'background.default', // Use background similar to the uploaded image
+          bgcolor: 'background.default',
           boxShadow: 'none',
         }}
       >
@@ -55,18 +68,21 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle }: TopbarProps) => {
             <IconButton aria-label="search-icon" sx={{ display: { md: 'none' } }}>
               <IconifyIcon
                 icon="gravity-ui:magnifier"
-                sx={{ color: 'primary.main', fontSize: 12 }} // Ubah ukuran ikon di sini
+                sx={{ color: 'primary.main', fontSize: 12 }}
               />
             </IconButton>
           </Stack>
 
-          <Typography
-            variant="h3"
-            color="primary.darker"
-            sx={{ display: { xs: 'none', lg: 'block' } }}
-          >
-            {pageTitle}
-          </Typography>
+          {/* Only show the title if there's a match */}
+          {pageTitle && (
+            <Typography
+              variant="h3"
+              color="primary.darker"
+              sx={{ display: { xs: 'none', lg: 'block' } }}
+            >
+              {pageTitle}
+            </Typography>
+          )}
 
           <Stack
             direction="row"
@@ -81,7 +97,7 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle }: TopbarProps) => {
                 display: { xs: 'none', md: 'block' },
                 minWidth: 100,
                 maxWidth: 200,
-                bgcolor: 'background.paper', // Background color to match the search bar style
+                bgcolor: 'background.paper',
               }}
             />
             <SettingsMenu />

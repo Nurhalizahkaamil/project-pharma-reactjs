@@ -14,7 +14,7 @@ const LogoHeader = (props: LogoHeaderProps) => {
       href={rootPaths.root}
       {...props}
     >
-      <Typography variant="h3" color="primary.darker">
+      <Typography variant="h3" color="#FFFFFF">
         Inventory System
       </Typography>
     </Stack>
