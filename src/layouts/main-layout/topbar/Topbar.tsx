@@ -1,7 +1,7 @@
 import { AppBar, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import sitemap, { MenuItem } from 'routes/sitemap'; // Make sure to import the MenuItem type
+import sitemap, { MenuItem } from 'routes/sitemap'; // Pastikan untuk mengimpor tipe MenuItem
 import IconifyIcon from 'components/base/IconifyIcon';
 import Search from 'components/common/Search';
 import ElevationScroll from './ElevationScroll';
@@ -9,23 +9,24 @@ import AccountDropdown from './AccountDropdown';
 import SettingsMenu from './SettingsMenu';
 import Notification from './Notification';
 
+// Tambahkan title ke dalam TopbarProps
 interface TopbarProps {
   drawerWidth: number;
   onHandleDrawerToggle: () => void;
+  title: string; // Menambahkan title di sini
 }
 
-const Topbar = ({ drawerWidth, onHandleDrawerToggle }: TopbarProps) => {
+const Topbar = ({ drawerWidth, onHandleDrawerToggle, title }: TopbarProps) => {
   const location = useLocation();
 
   const pageTitle = useMemo(() => {
     const findPageTitle = (items: MenuItem[]): string => {
-      // Specify the return type as string
       for (const item of items) {
         if (item.path === location.pathname) {
           return item.name;
         }
         if (item.items) {
-          const nestedTitle: string | undefined = findPageTitle(item.items); // Explicitly define the type
+          const nestedTitle: string | undefined = findPageTitle(item.items);
           if (nestedTitle) return nestedTitle;
         }
       }
@@ -73,14 +74,14 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle }: TopbarProps) => {
             </IconButton>
           </Stack>
 
-          {/* Only show the title if there's a match */}
-          {pageTitle && (
+          {/* Tampilkan title yang diterima dari props */}
+          {title && (
             <Typography
               variant="h3"
               color="primary.darker"
               sx={{ display: { xs: 'none', lg: 'block' } }}
             >
-              {pageTitle}
+              {title} {/* Tampilkan title di sini */}
             </Typography>
           )}
 

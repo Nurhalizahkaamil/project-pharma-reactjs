@@ -17,7 +17,7 @@ const sitemap: MenuItem[] = [
   {
     id: 1,
     name: 'Dashboard',
-    path: rootPaths.root,
+    path: rootPaths.dashboard,
     pathName: 'dashboard',
     svgIcon: DashboardIcon,
     active: true,

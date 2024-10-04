@@ -9,44 +9,47 @@ import SalesMapping from 'components/sections/dashboard/sales-mapping/SalesMappi
 import VolumeVsService from 'components/sections/dashboard/volume-vs-service/VolumeVsService';
 import ProductPerformance from 'components/sections/dashboard/product-performance/ProductPerformance';
 import WelcomeUser from 'components/sections/dashboard/welcome-user/welcomeuser';
+import MainLayout from 'layouts/main-layout'; // Import MainLayout
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={12} xl={7}>
-        <WelcomeUser />
-      </Grid>
-      <Grid item xs={12} xl={7}>
-        <Sales />
-      </Grid>
-      <Grid item xs={12} md={7} xl={5}>
-        <VisitorInsights />
-      </Grid>
+    <MainLayout title={'Dashboard'}> {/* Wrap the Dashboard content inside MainLayout */}
+      <Grid container spacing={4}>
+        <Grid item xs={12} xl={7}>
+          <WelcomeUser />
+        </Grid>
+        <Grid item xs={12} xl={7}>
+          <Sales />
+        </Grid>
+        <Grid item xs={12} md={7} xl={5}>
+          <VisitorInsights />
+        </Grid>
 
-      <Grid item xs={12} md={5} xl={6}>
-        <TotalRevenue />
-      </Grid>
-      <Grid item xs={12} md={7} xl={3}>
-        <CustomerSatisfaction />
-      </Grid>
-      <Grid item xs={12} md={5} xl={3}>
-        <TargetVsReality />
-      </Grid>
+        <Grid item xs={12} md={5} xl={6}>
+          <TotalRevenue />
+        </Grid>
+        <Grid item xs={12} md={7} xl={3}>
+          <CustomerSatisfaction />
+        </Grid>
+        <Grid item xs={12} md={5} xl={3}>
+          <TargetVsReality />
+        </Grid>
 
-      <Grid item xs={12} xl={5}>
-        <TopProducts />
-      </Grid>
-      <Grid item xs={12} md={6} xl={4}>
-        <SalesMapping />
-      </Grid>
-      <Grid item xs={12} md={6} xl={3}>
-        <VolumeVsService />
-      </Grid>
+        <Grid item xs={12} xl={5}>
+          <TopProducts />
+        </Grid>
+        <Grid item xs={12} md={6} xl={4}>
+          <SalesMapping />
+        </Grid>
+        <Grid item xs={12} md={6} xl={3}>
+          <VolumeVsService />
+        </Grid>
 
-      <Grid item xs={12}>
-        <ProductPerformance />
+        <Grid item xs={12}>
+          <ProductPerformance />
+        </Grid>
       </Grid>
-    </Grid>
+    </MainLayout>
   );
 };
 

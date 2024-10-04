@@ -10,6 +10,7 @@ const SignIn = lazy(() => import('pages/authentication/SignIn'));
 const SignUp = lazy(() => import('pages/authentication/SignUp'));
 const Page404 = lazy(() => import('pages/errors/Page404'));
 const Units = lazy(() => import('pages/master product/units/UnitsPages'));
+const WelcomePage = lazy(() => import('pages/welcomPages/Pages.welcom')); // WelcomePage Import
 
 import PageLoader from 'components/loading/PageLoader';
 import Progress from 'components/loading/Progress';
@@ -24,29 +25,21 @@ export const routes = [
     ),
     children: [
       {
-        path: rootPaths.root,
+        path: rootPaths.root, // Set as default '/'
         element: (
-          <MainLayout title="Dashboard">
-            {' '}
-            {/* Adding title here */}
-            <Suspense fallback={<PageLoader />}>
-              <Outlet />
-            </Suspense>
-          </MainLayout>
+          <Suspense fallback={<PageLoader />}>
+            <WelcomePage /> {/* Load WelcomePage as default */}
+          </Suspense>
         ),
-        children: [
-          {
-            index: true,
-            element: <Dashboard />,
-          },
-        ],
       },
       {
-        path: rootPaths.root,
+        path: rootPaths.dashboard,
+        element: <Dashboard />,
+      },      
+      {
+        path: rootPaths.units,
         element: (
           <MainLayout title="Units">
-            {' '}
-            {/* Adding title here for Units */}
             <Suspense fallback={<PageLoader />}>
               <Outlet />
             </Suspense>
@@ -60,11 +53,9 @@ export const routes = [
         ],
       },
       {
-        path: rootPaths.root,
+        path: rootPaths.products,
         element: (
           <MainLayout title="Products">
-            {' '}
-            {/* Adding title here for Units */}
             <Suspense fallback={<PageLoader />}>
               <Outlet />
             </Suspense>
