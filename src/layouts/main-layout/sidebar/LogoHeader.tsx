@@ -15,7 +15,7 @@ const LogoHeader = (props: LogoHeaderProps) => {
       {...props}
     >
       <Typography variant="h3" color="#FFFFFF">
-        Inventory System
+        INVENTORY SYSTEM
       </Typography>
     </Stack>
   );

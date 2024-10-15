@@ -1,20 +1,23 @@
 import { Suspense, lazy } from 'react';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import paths, { rootPaths } from './paths';
+import PageLoader from 'components/loading/PageLoader';
+import Progress from 'components/loading/Progress';
+import Dashboard from 'pages/admingudang/dashboard/Dashboard';
+import WarehousePage from 'pages/admingudang/master inventory/warehouse/WarehousePage'
+import InventoriesPage from 'pages/admingudang/master inventory/inventory/InventoriesPages';
 
 const App = lazy(() => import('App'));
 const MainLayout = lazy(() => import('layouts/main-layout'));
 const AuthLayout = lazy(() => import('layouts/auth-layout'));
-const Dashboard = lazy(() => import('pages/dashboard/Dashboard'));
+// const Dashboard = lazy(() => import('pages/dashboard/Dashboard'));
 const SignIn = lazy(() => import('pages/authentication/SignIn'));
 const SignUp = lazy(() => import('pages/authentication/SignUp'));
 const Page404 = lazy(() => import('pages/errors/Page404'));
-const Units = lazy(() => import('pages/master product/units/UnitsPages'));
-const WelcomePage = lazy(() => import('pages/welcomPages/Pages.welcom')); // WelcomePage Import
-
-import PageLoader from 'components/loading/PageLoader';
-import Progress from 'components/loading/Progress';
-import ProductsPages from 'pages/master product/products/ProductsPages';
+const Units = lazy(() => import('pages/admingudang/master product/units/UnitsPages')); // Periksa path
+const WelcomePage = lazy(() => import('pages/welcomPages/Pages.welcome')); // Periksa path
+const ProductsPages = lazy(() => import('pages/admingudang/master product/products/ProductsPages')); // Periksa path
+const CategoriesPage = lazy(() => import('pages/admingudang/master product/categories/CategoriesPages')); // Periksa path
 
 export const routes = [
   {
@@ -25,17 +28,23 @@ export const routes = [
     ),
     children: [
       {
-        path: rootPaths.root, // Set as default '/'
+        path: rootPaths.root,
         element: (
           <Suspense fallback={<PageLoader />}>
-            <WelcomePage /> {/* Load WelcomePage as default */}
+            <WelcomePage />
           </Suspense>
         ),
       },
       {
         path: rootPaths.dashboard,
-        element: <Dashboard />,
-      },      
+        element: (
+          <MainLayout title="Dashboard">
+            <Suspense fallback={<PageLoader />}>
+              <Dashboard />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
       {
         path: rootPaths.units,
         element: (
@@ -47,7 +56,7 @@ export const routes = [
         ),
         children: [
           {
-            path: paths.units, // Using the correct path
+            path: paths.units,
             element: <Units />,
           },
         ],
@@ -63,8 +72,56 @@ export const routes = [
         ),
         children: [
           {
-            path: paths.products, // Using the correct path
+            path: paths.products,
             element: <ProductsPages />,
+          },
+        ],
+      },
+      {
+        path: rootPaths.categories,
+        element: (
+          <MainLayout title="Categories">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+        children: [
+          {
+            path: paths.categories,
+            element: <CategoriesPage />,
+          },
+        ],
+      },
+      {
+        path: rootPaths.warehouse,
+        element: (
+          <MainLayout title="Warehouse">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+        children: [
+          {
+            path: paths.warehouse,
+            element: <WarehousePage />,
+          },
+        ],
+      },
+      {
+        path: rootPaths.inventories,
+        element: (
+          <MainLayout title="Inventories">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+        children: [
+          {
+            path: paths.inventories,
+            element: <InventoriesPage />,
           },
         ],
       },

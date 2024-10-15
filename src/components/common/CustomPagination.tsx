@@ -9,7 +9,7 @@ import {
 } from '@mui/x-data-grid';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { MutableRefObject } from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles'; // Ganti import ini
 
 // Styled pagination button with green color
 const StyledPaginationItem = styled(PaginationItem)(({ theme }) => ({

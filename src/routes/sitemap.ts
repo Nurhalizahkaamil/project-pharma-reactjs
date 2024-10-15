@@ -1,5 +1,6 @@
+// sitemap.ts
 import { SvgIconProps } from '@mui/material';
-import paths, { rootPaths } from './paths';
+import paths from './paths';
 import DashboardIcon from 'components/icons/DashboardIcon';
 
 export interface MenuItem {
@@ -17,33 +18,10 @@ const sitemap: MenuItem[] = [
   {
     id: 1,
     name: 'Dashboard',
-    path: rootPaths.dashboard,
+    path: paths.dashboard, // Path diperbaiki
     pathName: 'dashboard',
     svgIcon: DashboardIcon,
     active: true,
-  },
-  {
-    id: 13,
-    name: 'Authentication',
-    pathName: 'authentication',
-    icon: 'material-symbols:security-rounded',
-    active: true,
-    items: [
-      {
-        id: 14,
-        name: 'Sign in',
-        path: paths.signin,
-        pathName: 'sign-in',
-        active: true,
-      },
-      {
-        id: 15,
-        name: 'Sign up',
-        path: paths.signup,
-        pathName: 'sign-up',
-        active: true,
-      },
-    ],
   },
   {
     id: 2,
@@ -55,21 +33,21 @@ const sitemap: MenuItem[] = [
       {
         id: 3,
         name: 'Units',
-        path: paths.units, // Ubah dari '#!' ke path yang benar
+        path: paths.units, // Path diperbaiki
         pathName: 'units',
         active: true,
       },
       {
         id: 4,
         name: 'Categories',
-        path: '/categories', // Sesuaikan path dengan yang akan digunakan
+        path: paths.categories, // Path diperbaiki
         pathName: 'categories',
         active: true,
       },
       {
         id: 5,
         name: 'Products',
-        path: paths.products, // Sesuaikan path dengan yang akan digunakan
+        path: paths.products, // Path diperbaiki
         pathName: 'products',
         active: true,
       },
@@ -78,21 +56,21 @@ const sitemap: MenuItem[] = [
   {
     id: 6,
     name: 'Master Inventory',
-    path: '/master-inventory', // Path yang akan mengarah ke inventory
-    pathName: 'sales-report',
-    icon: 'ph:chart-line',
+    pathName: 'master-inventory',
+    icon: 'ri:bar-chart-line',
+    active: true,
     items: [
       {
         id: 7,
         name: 'Warehouse',
-        path: '/warehouse', // Sesuaikan dengan rute yang diinginkan
+        path: paths.warehouse, // Sesuaikan dengan rute yang diinginkan
         pathName: 'warehouse',
         active: true,
       },
       {
         id: 8,
         name: 'Inventories',
-        path: '/inventories', // Sesuaikan dengan rute yang diinginkan
+        path: paths.inventories, // Sesuaikan dengan rute yang diinginkan
         pathName: 'inventories',
         active: true,
       },
@@ -104,6 +82,7 @@ const sitemap: MenuItem[] = [
     path: '/supplier', // Sesuaikan path dengan routing yang ada
     pathName: 'supplier',
     icon: 'mdi:message-processing-outline',
+    active: true,
   },
   {
     id: 10,

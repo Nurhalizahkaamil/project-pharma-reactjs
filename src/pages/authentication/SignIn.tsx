@@ -11,43 +11,43 @@ import {
   Stack,
   TextField,
   Typography,
-  Alert, // Import Alert component for error messages
+  Alert,
 } from '@mui/material';
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import paths, { rootPaths } from 'routes/paths';
+import paths from 'routes/paths';
 import IconifyIcon from 'components/base/IconifyIcon';
 import PasswordTextField from 'components/common/PasswordTextField';
 import IconKey from 'assets/iconkey.png';
 import { loginUser } from 'service/auth.service';
 
-const checkBoxLabel = { inputProps: { 'aria-label': 'Checkbox' } };
-
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // State for storing error message
+  const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Reset error state on form submission
+
+    if (!username || !password) {
+      setError('Please enter both username and password.');
+      return;
+    }
 
     try {
-      const data = await loginUser(username, password); // Call login service
-
+      const data = await loginUser(username, password);
       if (data.accessToken) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('accessToken', data.accessToken);
-        navigate('/dashboard'); // Redirect to dashboard
+        navigate(paths.dashboard);
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError('Incorrect username or password'); // Display error message
-      } else {
-        setError('An unknown error occurred.');
-      }
+      console.error(err); // Log the error for debugging
+      setError('Incorrect username or password'); // Display error message
     }
   };
 
@@ -64,7 +64,6 @@ const SignIn = () => {
     >
       <Container maxWidth="lg">
         <Grid container spacing={2}>
-          {/* Left Section */}
           <Grid
             item
             xs={12}
@@ -96,7 +95,6 @@ const SignIn = () => {
             <img src={IconKey} alt="icon-key" style={{ width: '70%', marginBottom: '30px' }} />
           </Grid>
 
-          {/* Right Section */}
           <Grid item xs={12} md={6}>
             <Paper
               sx={{
@@ -116,7 +114,6 @@ const SignIn = () => {
                 Sign In
               </Typography>
 
-              {/* Display error message */}
               {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                   {error}
@@ -155,7 +152,13 @@ const SignIn = () => {
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
                   <FormControlLabel
-                    control={<Checkbox {...checkBoxLabel} color="primary" />}
+                    control={
+                      <Checkbox
+                        checked={rememberMe}
+                        onChange={() => setRememberMe(!rememberMe)}
+                        color="primary"
+                      />
+                    }
                     label={<Typography variant="subtitle1">Remember me</Typography>}
                   />
                   <Link href="#!" underline="hover">

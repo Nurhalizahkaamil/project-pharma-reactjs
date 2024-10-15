@@ -1,7 +1,4 @@
 import { AppBar, IconButton, Stack, Toolbar, Typography } from '@mui/material';
-import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
-import sitemap, { MenuItem } from 'routes/sitemap'; // Pastikan untuk mengimpor tipe MenuItem
 import IconifyIcon from 'components/base/IconifyIcon';
 import Search from 'components/common/Search';
 import ElevationScroll from './ElevationScroll';
@@ -17,25 +14,6 @@ interface TopbarProps {
 }
 
 const Topbar = ({ drawerWidth, onHandleDrawerToggle, title }: TopbarProps) => {
-  const location = useLocation();
-
-  const pageTitle = useMemo(() => {
-    const findPageTitle = (items: MenuItem[]): string => {
-      for (const item of items) {
-        if (item.path === location.pathname) {
-          return item.name;
-        }
-        if (item.items) {
-          const nestedTitle: string | undefined = findPageTitle(item.items);
-          if (nestedTitle) return nestedTitle;
-        }
-      }
-      return '';
-    };
-
-    return findPageTitle(sitemap);
-  }, [location]);
-
   return (
     <ElevationScroll>
       <AppBar

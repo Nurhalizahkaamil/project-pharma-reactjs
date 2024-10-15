@@ -11,7 +11,7 @@ const Page404 = () => {
       sx={{ height: '100vh', px: 5, py: 10 }}
     >
       <Image src={errorImg} sx={{ width: { xs: 1, sm: 1 / 2 }, height: 1 / 2 }} />
-      <Button variant="contained" component={Link} href="/">
+      <Button variant="contained" component={Link} href="/dashboard">
         <Typography>Go To Dashboard</Typography>
       </Button>
     </Stack>
