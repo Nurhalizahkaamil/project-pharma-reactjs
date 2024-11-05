@@ -1,8 +1,17 @@
 // sitemap.ts
-import { SvgIconProps } from '@mui/material';
+import { SvgIconTypeMap } from '@mui/material';
 import paths from './paths';
-import DashboardIcon from 'components/icons/DashboardIcon';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import CategoryIcon from '@mui/icons-material/Category';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import PersonIcon from '@mui/icons-material/Person';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 
+// Update the type for svgIcon
 export interface MenuItem {
   id: number;
   name: string;
@@ -10,7 +19,7 @@ export interface MenuItem {
   path?: string;
   active?: boolean;
   icon?: string;
-  svgIcon?: (props: SvgIconProps) => JSX.Element;
+  svgIcon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>; // Correct type for MUI icons
   items?: MenuItem[];
 }
 
@@ -18,36 +27,37 @@ const sitemap: MenuItem[] = [
   {
     id: 1,
     name: 'Dashboard',
-    path: paths.dashboard, // Path diperbaiki
+    path: paths.dashboard,
     pathName: 'dashboard',
-    svgIcon: DashboardIcon,
+    svgIcon: DashboardIcon, // Directly pass the MUI icon component
     active: true,
   },
   {
     id: 2,
     name: 'Master Products',
     pathName: 'master-products',
-    icon: 'ri:bar-chart-line',
+    svgIcon: Inventory2Icon, // Directly pass the MUI icon component
     active: true,
     items: [
       {
         id: 3,
         name: 'Units',
-        path: paths.units, // Path diperbaiki
+        path: paths.units,
         pathName: 'units',
         active: true,
       },
       {
         id: 4,
         name: 'Categories',
-        path: paths.categories, // Path diperbaiki
+        path: paths.categories,
         pathName: 'categories',
+        svgIcon: CategoryIcon, // Directly pass the MUI icon component
         active: true,
       },
       {
         id: 5,
         name: 'Products',
-        path: paths.products, // Path diperbaiki
+        path: paths.products,
         pathName: 'products',
         active: true,
       },
@@ -57,20 +67,20 @@ const sitemap: MenuItem[] = [
     id: 6,
     name: 'Master Inventory',
     pathName: 'master-inventory',
-    icon: 'ri:bar-chart-line',
+    svgIcon: WarehouseIcon, // Directly pass the MUI icon component
     active: true,
     items: [
       {
         id: 7,
         name: 'Warehouse',
-        path: paths.warehouse, // Sesuaikan dengan rute yang diinginkan
+        path: paths.warehouse,
         pathName: 'warehouse',
         active: true,
       },
       {
         id: 8,
         name: 'Inventories',
-        path: paths.inventories, // Sesuaikan dengan rute yang diinginkan
+        path: paths.inventories,
         pathName: 'inventories',
         active: true,
       },
@@ -78,34 +88,56 @@ const sitemap: MenuItem[] = [
   },
   {
     id: 9,
-    name: 'Supplier',
-    path: '/supplier', // Sesuaikan path dengan routing yang ada
-    pathName: 'supplier',
-    icon: 'mdi:message-processing-outline',
+    name: 'Master Data',
+    pathName: 'master-data',
+    svgIcon: LocalShippingIcon, // Directly pass the MUI icon component
     active: true,
+    items: [
+      {
+        id: 10,
+        name: 'Supplier',
+        path: paths.suppliers,
+        pathName: 'suppliers',
+        active: true,
+      },
+      {
+        id: 11,
+        name: 'Doctor',
+        path: paths.doctors,
+        pathName: 'doctor',
+        active: true,
+      },
+      {
+        id: 12,
+        name: 'Customer',
+        path: paths.customers,
+        pathName: 'customer',
+        active: true,
+      },
+    ],
   },
   {
-    id: 10,
+    id: 13,
     name: 'Report Entry Product',
-    path: '/report-entry-product', // Sesuaikan path
+    path: '/report-entry-product',
     pathName: 'report-entry-product',
-    icon: 'fluent:settings-24-regular',
+    svgIcon: AssignmentIcon, // Directly pass the MUI icon component
     active: true,
   },
   {
-    id: 11,
+    id: 14,
     name: 'Profile',
-    path: '/profile', // Sesuaikan dengan routing profil
+    path: '/profile',
     pathName: 'profile',
-    icon: 'fluent:settings-24-regular',
+    svgIcon: PersonIcon, // Directly pass the MUI icon component
     active: true,
   },
   {
-    id: 12,
+    id: 15,
     name: 'Sign Out',
-    path: '/sign-out', // Tentukan aksi sign out atau routingnya
+    path: '/sign-out',
     pathName: 'sign-out',
-    icon: 'humbleicons:logout',
+    svgIcon: ExitToAppIcon, // Directly pass the MUI icon component
     active: true,
   },
 ];

@@ -18,7 +18,7 @@ const VerticalNavbar = ({
   return (
     <Box
       component="nav"
-      sx={{ width: { lg: drawerWidth }, flexShrink: { sm: 0 } }}
+      sx={{ width: { lg: drawerWidth }, flexShrink: { sm: 5 } }}
       aria-label="drawer"
     >
       <Drawer

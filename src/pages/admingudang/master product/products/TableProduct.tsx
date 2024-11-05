@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,171 +8,231 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
+  IconButton,
   TableFooter,
   TablePagination,
+  Snackbar,
+  Alert,
 } from '@mui/material';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import DeleteIcon from 'assets/trash.png';
+import EditIcon from 'assets/edit.png';
+import { ProductDtoOut } from 'Dto/product/product.dto';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
 
-// Definisikan interface untuk produk
-interface Product {
-  id: string;
-  images: string[];
-  name: string;
-  description: string;
-  price: number;
-  expiryDate: string;
-  unit: string;
-  categories: string[];
-  status: string;
+interface ProductsTableProps {
+  tableData: ProductDtoOut[];
+  handleDelete: (id: number) => Promise<void>;
+  currentPage: number;
+  totalItems: number;
+  totalPages?: number;
+  itemsPerPage: number;
+  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  handlePageChange: (page: number) => void;
+  handleEdit: (id: number) => void;
 }
 
-const ProductTable = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
+const ProductsTable: React.FC<ProductsTableProps> = ({
+  tableData,
+  handleEdit,
+  handleDelete,
+  currentPage,
+  totalItems,
+  handlePageChange,
+  itemsPerPage,
+  setItemsPerPage,
+}) => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
+  const openDeleteModal = (id: number) => {
+    setSelectedProductId(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProductId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedProductId) {
       try {
-        const response = await axios.get('/api/products'); // Ganti dengan endpoint API Anda
-        setProducts(response.data);
-        setTotalItems(response.data.length); // Set total items
+        await handleDelete(selectedProductId);
+        setIsModalOpen(false);
+        setIsSnackbarOpen(true);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Failed to delete product:', error);
       }
-    };
-
-    fetchProducts();
-  }, []);
-
-  const handleEdit = (_id: string) => {
-    // Logika untuk edit produk
+    }
   };
 
-  const handleDelete = (_id: string) => {
-    // Logika untuk delete produk
+  const handleCloseSnackbar = () => {
+    setIsSnackbarOpen(false);
   };
 
-  const handlePageChange = (_event: unknown, newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setItemsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(0);
+  const handleEditClick = (id: number) => {
+    navigate(`/master-product/products/update/${id}`);
   };
 
   return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'white' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                ID
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Images
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Name
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Description
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Price
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Expiry Date
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Unit
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Categories
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Status
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Actions
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.length > 0 ? (
-            products
-              .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-              .map((product) => (
+    <Paper>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  No
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Product Images
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Product Code
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Name
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Description
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Purchase Price
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Selling Price
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Expiry Date
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Stock Quantity
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Category
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Unit
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Drug Class
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Actions
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tableData.length > 0 ? (
+              tableData.map((product, index) => (
                 <TableRow key={product.id}>
-                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
                   <TableCell>
-                    {product.images.map((img, index) => (
+                    {product.productImageUrl ? (
                       <img
-                        key={index}
-                        src={img}
-                        alt={`Product Image ${index + 1}`}
-                        style={{ width: '50px', height: '50px' }}
+                        src={product.productImageUrl}
+                        alt={product.name}
+                        width="50"
+                        height="50"
                       />
-                    ))}
+                    ) : (
+                      'No Image'
+                    )}
                   </TableCell>
+                  <TableCell>{product.productCode}</TableCell>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.description}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.expiryDate}</TableCell>
-                  <TableCell>{product.unit}</TableCell>
-                  <TableCell>{product.categories.join(', ')}</TableCell>
-                  <TableCell>{product.status}</TableCell>
+                  <TableCell>{product.purchasePrice}</TableCell>
+                  <TableCell>{product.sellingPrice}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleEdit(product.id)}>Edit</Button>
-                    <Button onClick={() => handleDelete(product.id)}>Delete</Button>
+                    {product.expiryDate ? new Date(product.expiryDate).toLocaleDateString() : 'N/A'}
+                  </TableCell>
+                  <TableCell>{product.stockQuantity}</TableCell>
+                  <TableCell>{product.category.name}</TableCell>
+                  <TableCell>{product.unit.name}</TableCell>
+                  <TableCell>{product.drugClass || 'N/A'}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleEditClick(product.id as number)}
+                      color="primary"
+                      aria-label="edit"
+                    >
+                      <img src={EditIcon} alt="edit icon" width="24" height="24" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openDeleteModal(product.id)}
+                      color="secondary"
+                      aria-label="delete"
+                    >
+                      <img src={DeleteIcon} alt="delete icon" width="24" height="24" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
-          ) : (
+            ) : (
+              <TableRow>
+                <TableCell colSpan={13} align="center">
+                  <Typography>No products available.</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
             <TableRow>
-              <TableCell colSpan={10} align="center">
-                <Typography>No products available.</Typography>
-              </TableCell>
+              <TablePagination
+                count={totalItems}
+                page={currentPage - 1}
+                onPageChange={(_, newPage) => handlePageChange(newPage + 1)}
+                rowsPerPage={itemsPerPage}
+                onRowsPerPageChange={(event) => setItemsPerPage(parseInt(event.target.value, 10))}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              count={totalItems}
-              page={currentPage}
-              onPageChange={handlePageChange}
-              rowsPerPage={itemsPerPage}
-              onRowsPerPageChange={handleRowsPerPageChange}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+
+      <ConfirmationDialog
+        open={isModalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+        title="Delete Product"
+      />
+
+      <Snackbar open={isSnackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Product deleted successfully!
+        </Alert>
+      </Snackbar>
+    </Paper>
   );
 };
 
-export default ProductTable;
+export default ProductsTable;

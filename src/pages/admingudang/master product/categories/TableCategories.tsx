@@ -8,57 +8,76 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  IconButton,
   TableFooter,
   TablePagination,
+  Snackbar,
+  Alert,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import DeleteIcon from 'assets/trash.png';
+import EditIcon from 'assets/edit.png';
 import { CategoriesDto } from 'Dto/categories/categories.dto';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
+import { deleteCategories } from 'service/categories.service';
 
 interface CategoriesTableProps {
-  categories: CategoriesDto[];
+  tableData: CategoriesDto[];
   handleEdit: (id: number) => void;
-  handleDelete: (id: number) => Promise<void>;
+  handleDelete: (id: number) => void;
   currentPage: number;
   totalItems: number;
-  itemsPerPage: number;
+  totalPages?: number;
   setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  itemsPerPage: number;
   handlePageChange: (page: number) => void;
 }
 
 const CategoriesTable: React.FC<CategoriesTableProps> = ({
-  categories,
+  tableData,
   handleEdit,
   handleDelete,
   currentPage,
   totalItems,
-  itemsPerPage,
+  totalPages,
   setItemsPerPage,
+  itemsPerPage,
   handlePageChange,
 }) => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
-  // Handle Delete
   const openDeleteModal = (id: number) => {
     setSelectedCategoryId(id);
     setIsModalOpen(true);
   };
 
-  const confirmDelete = async () => {
-    if (selectedCategoryId) {
-      await handleDelete(selectedCategoryId);
-      setIsModalOpen(false);
-    }
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedCategoryId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedCategoryId) {
+      try {
+        await deleteCategories(selectedCategoryId); // Menghapus dari server
+        handleDelete(selectedCategoryId); // Menghapus dari state di frontend
+        setIsModalOpen(false);
+        setIsSnackbarOpen(true);
+      } catch (error) {
+        console.error('Failed to delete category:', error);
+      }
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setIsSnackbarOpen(false);
+  };
+
+  const handleEditClick = (id: number) => {
+    navigate(`/master-product/categories/update/${id}`);
   };
 
   return (
@@ -84,7 +103,7 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
               </TableCell>
               <TableCell>
                 <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                  Status
+                  Image
                 </Typography>
               </TableCell>
               <TableCell>
@@ -95,38 +114,45 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories.length > 0 ? (
-              categories.map((category, index) => (
+            {tableData.length > 0 ? (
+              tableData.map((category, index) => (
                 <TableRow key={category.id}>
                   <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
                   <TableCell>{category.name}</TableCell>
                   <TableCell>{category.description}</TableCell>
                   <TableCell>
-                    <span
-                      style={{
-                        backgroundColor: category.status ? 'lightgreen' : 'lightcoral',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      {category.status ? 'Active' : 'Inactive'}
-                    </span>
+                    {category.categoryImageUrl ? (
+                      <img
+                        src={category.categoryImageUrl}
+                        alt="Category"
+                        style={{
+                          width: '50px',
+                          height: '50px',
+                          objectFit: 'cover',
+                          borderRadius: '4px',
+                        }}
+                      />
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        No Image
+                      </Typography>
+                    )}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      onClick={() => handleEdit(category.id)}
-                      variant="outlined"
+                    <IconButton
+                      onClick={() => handleEditClick(category.id)}
                       color="primary"
+                      aria-label="edit"
                     >
-                      Edit
-                    </Button>
-                    <Button
+                      <img src={EditIcon} alt="edit icon" width="24" height="24" />
+                    </IconButton>
+                    <IconButton
                       onClick={() => openDeleteModal(category.id)}
-                      variant="outlined"
                       color="secondary"
+                      aria-label="delete"
                     >
-                      Delete
-                    </Button>
+                      <img src={DeleteIcon} alt="delete icon" width="24" height="24" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
@@ -152,21 +178,23 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
         </Table>
       </TableContainer>
 
-      {/* Delete Confirmation Modal */}
-      <Dialog open={isModalOpen} onClose={closeModal}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this category?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeModal} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={confirmDelete} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmationDialog
+        open={isModalOpen}
+        title="Are you sure you want to delete this category?"
+        onConfirm={confirmDelete}
+        onClose={closeModal}
+      />
+
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Category deleted successfully!
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 };

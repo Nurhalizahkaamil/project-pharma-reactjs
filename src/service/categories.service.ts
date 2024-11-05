@@ -1,63 +1,82 @@
-// Import fetchData dari api.service.ts
-import { fetchData } from './api.service';
-import { BaseDto } from '../Dto/Base/base.dto';
+import axios from 'axios';
 import { CreateCategoriesDto, UpdateCategoriesDto } from '../Dto/categories/categories.dto';
+import { BaseDto } from '../Dto/Base/base.dto';
+import { getAccessToken } from './auth.service';
 
-// Mengambil data kategori
+const API_URL = `${import.meta.env.VITE_PUBLIC_SERVER}/categories`;
+
+// Service untuk mengambil semua kategori (GET)
 export const getCategories = async (params: BaseDto) => {
   try {
-    const data = await fetchData({
-      method: 'GET',
-      endpoint: '/categories',
-      params: { ...params },
+    const response = await axios.get(API_URL, {
+      params,
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);
-    throw error;
+    throw new Error('Failed to fetch categories');
   }
 };
 
-// Membuat kategori baru
+// Service untuk membuat kategori baru (POST)
 export const createCategories = async (payload: CreateCategoriesDto) => {
   try {
-    const data = await fetchData({
-      method: 'POST',
-      endpoint: '/categories',
-      data: { ...payload },
+    const response = await axios.post(API_URL, payload, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error creating category:', error);
-    throw error;
+    throw new Error('Failed to create category');
   }
 };
 
-// Memperbarui kategori
-export const updateCategories = async (id: number, payload: UpdateCategoriesDto) => {
+// Service untuk memperbarui kategori (PATCH)
+export const updateCategories = async (categories_id: number, payload: UpdateCategoriesDto) => {
   try {
-    const data = await fetchData({
-      method: 'PATCH',
-      endpoint: `/categories/${id}`,
-      data: { ...payload },
+    const response = await axios.patch(`${API_URL}/${categories_id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error updating category:', error);
-    throw error;
+    throw new Error('Failed to update category');
   }
 };
 
-// Menghapus kategori
-export const deleteCategories = async (id: number) => {
+// Service untuk menghapus kategori (DELETE)
+export const deleteCategories = async (categories_id: number) => {
   try {
-    const data = await fetchData({
-      method: 'DELETE',
-      endpoint: `/categories/${id}`,
+    const response = await axios.delete(`${API_URL}/${categories_id}`, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error deleting category:', error);
-    throw error;
+    throw new Error('Failed to delete category');
+  }
+};
+
+// Service untuk mengambil kategori berdasarkan ID (GET by ID)
+export const getCategoryById = async (categories_id: number) => {
+  try {
+    const response = await axios.get(`${API_URL}/${categories_id}`, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching category by ID:', error);
+    throw new Error('Failed to fetch category by ID');
   }
 };

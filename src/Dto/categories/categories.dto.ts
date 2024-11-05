@@ -1,15 +1,20 @@
-// categories.dto.ts
 export interface CategoriesDto {
   id: number;
   name: string;
   description: string;
-  status: boolean;
+  categoryImageUrl?: string; // Kolom opsional yang sesuai dengan backend
 }
 
 export interface CreateCategoriesDto {
   name: string;
   description: string;
-  status: boolean;
+  categoryImageUrl?: string;
 }
 
-export type UpdateCategoriesDto = CreateCategoriesDto;
+export interface CategoriesResponse {
+  message: string;
+  statusCode: number;
+  data: CategoriesDto[];
+}
+
+export type UpdateCategoriesDto = Partial<CreateCategoriesDto>;

@@ -9,12 +9,12 @@ const LogoHeader = (props: LogoHeaderProps) => {
     <Stack
       direction="row"
       alignItems="left"
-      columnGap={2}
+      columnGap={1}
       component={Link}
       href={rootPaths.root}
-      {...props}
+      sx={{ mt: 5, ...props.sx }} // mt: 5 untuk margin top, lebih bawah
     >
-      <Typography variant="h3" color="#FFFFFF">
+      <Typography variant="h4" color="#FFFFFF">
         INVENTORY SYSTEM
       </Typography>
     </Stack>
