@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -8,127 +8,191 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
+  IconButton,
   TableFooter,
   TablePagination,
+  Snackbar,
+  Alert,
 } from '@mui/material';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import DeleteIcon from 'assets/trash.png';
+import EditIcon from 'assets/edit.png';
+import { WarehouseDtoOut } from 'Dto/warehousesDto/warehouses.dto';
+import { SupplierDtoOut } from 'Dto/supplierDto/supplier.dto';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
+import { deleteWarehouse, getSuppliers } from 'service/warehouses.service';
 
-// Definisikan interface untuk Warehouse
-interface Warehouse {
-  id: string;
-  name: string;
-  description: string;
-  status: string;
+interface WarehousesTableProps {
+  tableData: WarehouseDtoOut[];
+  handleEdit: (id: number) => void;
+  handleDelete: (id: number) => Promise<void>;
+  currentPage: number;
+  totalItems: number;
+  totalPages?: number;
+  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  itemsPerPage: number;
+  handlePageChange: (page: number) => void;
 }
 
-const WarehouseTable = () => {
-  const [warehouse, setWarehouse] = useState<Warehouse[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
+const WarehousesTable: React.FC<WarehousesTableProps> = ({
+  tableData,
+  handleEdit,
+  handleDelete,
+  currentPage,
+  totalItems,
+  handlePageChange,
+  itemsPerPage,
+  setItemsPerPage,
+}) => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState<number | null>(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [suppliers, setSuppliers] = useState<SupplierDtoOut[]>([]);
 
   useEffect(() => {
-    const fetchWarehouse = async () => {
+    const fetchSuppliers = async () => {
       try {
-        const response = await axios.get('/api/warehouse'); // Ganti dengan endpoint API Anda
-        setWarehouse(response.data);  // Perbaikan: setWarehouse, bukan memanggil fetchWarehouse lagi
-        setTotalItems(response.data.length); // Set total items
+        const response = await getSuppliers(); // Ambil data supplier dari API
+        setSuppliers(response.data); // Pastikan untuk menyesuaikan dengan struktur data yang benar
       } catch (error) {
-        console.error('Error fetching Warehouse:', error);
+        console.error('Failed to fetch suppliers:', error);
       }
     };
-
-    fetchWarehouse(); // Panggil fungsi tanpa argumen
+    fetchSuppliers();
   }, []);
 
-  const handleEdit = (_id: string) => {
-    // Logika untuk edit warehouse
+  const openDeleteModal = (id: number) => {
+    setSelectedWarehouseId(id);
+    setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    // Logika untuk delete warehouse
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedWarehouseId(null);
   };
 
-  const handlePageChange = (_event: unknown, newPage: number) => {
-    setCurrentPage(newPage);
+  const confirmDelete = async () => {
+    if (selectedWarehouseId) {
+      try {
+        await deleteWarehouse(selectedWarehouseId);
+        await handleDelete(selectedWarehouseId);
+        setIsModalOpen(false);
+        setIsSnackbarOpen(true);
+      } catch (error) {
+        console.error('Failed to delete warehouse:', error);
+      }
+    }
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setItemsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(0);
+  const handleCloseSnackbar = () => {
+    setIsSnackbarOpen(false);
+  };
+
+  const handleEditClick = (id: number) => {
+    navigate(`/master-inventory/warehouse/update/${id}`);
   };
 
   return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'white' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                ID
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Name
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Description
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Status
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Actions
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {warehouse.length > 0 ? (
-            warehouse
-              .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-              .map((warehouse) => (
+    <Paper>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  No
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Name
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Location
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Supplier
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Actions
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tableData.length > 0 ? (
+              tableData.map((warehouse, index) => (
                 <TableRow key={warehouse.id}>
-                  <TableCell>{warehouse.id}</TableCell>
+                  <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
                   <TableCell>{warehouse.name}</TableCell>
-                  <TableCell>{warehouse.description}</TableCell>
-                  <TableCell>{warehouse.status}</TableCell>
+                  <TableCell>{warehouse.location}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleEdit(warehouse.id)}>Edit</Button>
-                    <Button onClick={() => handleDelete(warehouse.id)}>Delete</Button>
+                    {/* {
+                      suppliers.find(suppliers => suppliers.id === warehouse.supplierId)?.name || 'Unknown Supplier'
+                    } */}
+                    {warehouse.supplier.name}
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleEditClick(warehouse.id)}
+                      color="primary"
+                      aria-label="edit"
+                    >
+                      <img src={EditIcon} alt="edit icon" width="24" height="24" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openDeleteModal(warehouse.id)}
+                      color="secondary"
+                      aria-label="delete"
+                    >
+                      <img src={DeleteIcon} alt="delete icon" width="24" height="24" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
-          ) : (
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  <Typography>No warehouses available.</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
             <TableRow>
-              <TableCell colSpan={10} align="center">
-                <Typography>No Warehouse available.</Typography>
-              </TableCell>
+              <TablePagination
+                count={totalItems}
+                page={currentPage - 1}
+                onPageChange={(_, newPage) => handlePageChange(newPage + 1)}
+                rowsPerPage={itemsPerPage}
+                onRowsPerPageChange={(event) => setItemsPerPage(parseInt(event.target.value, 10))}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              count={totalItems}
-              page={currentPage}
-              onPageChange={handlePageChange}
-              rowsPerPage={itemsPerPage}
-              onRowsPerPageChange={handleRowsPerPageChange}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+
+      <ConfirmationDialog
+        open={isModalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+        title={''}
+      />
+
+      <Snackbar open={isSnackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Warehouse deleted successfully!
+        </Alert>
+      </Snackbar>
+    </Paper>
   );
 };
 
-export default WarehouseTable;
+export default WarehousesTable;

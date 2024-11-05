@@ -74,6 +74,7 @@ const WelcomePage: React.FC = () => {
           sx={{
             padding: '0.8rem 2rem',
             fontSize: '1rem',
+            fontWeight: 'bold',
             borderRadius: '20px', // Membuat sudut melengkung
             backgroundColor: '#76C893', // Warna hijau (bisa disesuaikan)
             color: '#fff', // Mengubah warna teks menjadi putih

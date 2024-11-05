@@ -1,19 +1,20 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import paths from 'routes/paths'; // Pastikan Anda mengimpor path yang benar
+import paths from 'routes/paths'; // Pastikan paths terdefinisi dengan benar
 
-const CreateCategoriesButton = () => {
-  const navigate = useNavigate(); // Menggunakan useNavigate untuk navigasi
+const CreateCategoriesButton: React.FC = () => {
+  const navigate = useNavigate(); // Hook untuk navigasi
 
   const handleClick = () => {
-    navigate(paths.categories); // Ganti dengan path yang sesuai untuk halaman pembuatan kategori
+    console.log('Button clicked!'); // Debugging klik tombol
+    navigate(paths.createCategory); // Pastikan rute yang benar
   };
 
   return (
     <Button
       variant="contained"
-      onClick={handleClick} // Menambahkan penanganan klik
+      onClick={handleClick}
       sx={{
         marginBottom: 2,
         backgroundColor: '#76C89A',

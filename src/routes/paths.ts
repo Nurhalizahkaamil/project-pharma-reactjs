@@ -1,23 +1,56 @@
 export const rootPaths = {
-  root: '/', // Root for WelcomePage
+  root: '/',
   pagesRoot: 'pages',
   authRoot: 'authentication',
-  dashboard: 'dashboard', // Tetap
-  units: 'master-product/units', // Path Units
-  products: 'master-product/products', // Path Products
-  categories: 'master-product/categories', // Path Categories
-  inventory: 'master-inventory/inventory',
+  dashboard: 'dashboard',
+  units: 'master-product/units',
+  products: 'master-product/products',
+  createProduct: 'master-product/products/create',
+  updateProduct: 'master-product/products/update/:id',
+  categories: 'master-product/categories',
+  createCategory: 'master-product/categories/create',
+  updateCategory: 'master-product/categories/update/:id',
+  createUnits: 'master-product/units/create',
+  updateUnits: 'master-product/units/update/:id',
   warehouse: 'master-inventory/warehouse',
+  createWarehouse: 'master-inventory/warehouse/create',
+  updateWarehouse: 'master-inventory/warehouse/update/:id',
   inventories: 'master-inventory/inventories',
+  suppliers: 'master-data/suppliers',
+  createSupplier: 'master-data/suppliers/create',
+  updateSupplier: 'master-data/suppliers/update/:id',
+  doctors: 'master-data/doctors',
+  createDoctor: 'master-data/doctors/create',
+  updateDoctor: 'master-data/doctors/update/:id',
+  customers: 'master-data/customers',
+  createCustomer: 'master-data/customers/create',
+  updateCustomer: 'master-data/customers/update/:id',
 };
 
 export default {
   signin: `/${rootPaths.authRoot}/sign-in`,
   signup: `/${rootPaths.authRoot}/sign-up`,
   dashboard: `/${rootPaths.dashboard}`,
-  units: `/${rootPaths.units}`, // Path Units diperbaiki
-  products: `/${rootPaths.products}`, // Path Products diperbaiki
+  units: `/${rootPaths.units}`,
+  products: `/${rootPaths.products}`,
+  createProduct: `/${rootPaths.createProduct}`,
+  updateProduct: `/${rootPaths.updateProduct}`,
   categories: `/${rootPaths.categories}`,
-  warehouse: `/${rootPaths.warehouse}`, // Path Warehouse // Path Categories diperbaiki
+  createCategory: `/${rootPaths.createCategory}`,
+  updateCategory: `/${rootPaths.updateCategory}`,
+  createUnits: `/${rootPaths.createUnits}`,
+  updateUnits: `/${rootPaths.updateUnits}`,
+  warehouse: `/${rootPaths.warehouse}`,
+  createWarehouse: `/${rootPaths.createWarehouse}`,
+  updateWarehouse: `/${rootPaths.updateWarehouse}`,
   inventories: `/${rootPaths.inventories}`,
+  suppliers: `/${rootPaths.suppliers}`,
+  createSupplier: `/${rootPaths.createSupplier}`,
+  updateSupplier: `/${rootPaths.updateSupplier}`,
+  doctors: `/${rootPaths.doctors}`,
+  createDoctor: `/${rootPaths.createDoctor}`,
+  updateDoctor: `/${rootPaths.updateDoctor}`,
+  customers: `/${rootPaths.customers}`,
+  createCustomer: `/${rootPaths.createCustomer}`,
+  updateCustomer: `/${rootPaths.updateCustomer}`,
 };

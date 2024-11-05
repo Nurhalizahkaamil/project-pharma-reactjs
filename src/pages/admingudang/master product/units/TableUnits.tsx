@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,125 +8,171 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
+  IconButton,
   TableFooter,
   TablePagination,
+  Snackbar,
+  Alert,
 } from '@mui/material';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import DeleteIcon from 'assets/trash.png';
+import EditIcon from 'assets/edit.png';
+import { UnitsDto } from 'Dto/unitsDto/units.dto';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
+import { deleteUnits } from 'service/units.service';
 
-interface Unit {
-  id: string;
-  name: string;
-  description: string;
-  status: string;
+interface UnitsTableProps {
+  tableData: UnitsDto[];
+  handleEdit: (id: number) => void;
+  handleDelete: (id: number) => Promise<void>;
+  currentPage: number;
+  totalItems: number;
+  totalPages?: number;
+  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  itemsPerPage: number;
+  handlePageChange: (page: number) => void;
 }
 
-const UnitsTable = () => {
-  const [units, setUnits] = useState<Unit[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
+const UnitsTable: React.FC<UnitsTableProps> = ({
+  tableData = [], // Default value to avoid undefined
+  handleEdit,
+  handleDelete,
+  currentPage,
+  totalItems,
+  totalPages,
+  handlePageChange,
+  itemsPerPage,
+  setItemsPerPage,
+}) => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUnitsId, setSelectedUnitId] = useState<number | null>(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchUnits = async () => {
+  const openDeleteModal = (id: number) => {
+    setSelectedUnitId(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUnitId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedUnitsId !== null) {
       try {
-        const response = await axios.get('/api/units'); // Ganti dengan endpoint API Anda
-        setUnits(response.data);
-        setTotalItems(response.data.length); // Set total items
+        await deleteUnits(selectedUnitsId);
+        await handleDelete(selectedUnitsId);
+        setIsModalOpen(false);
+        setIsSnackbarOpen(true);
       } catch (error) {
-        console.error('Error fetching units:', error);
+        console.error('Failed to delete category:', error);
       }
-    };
-
-    fetchUnits();
-  }, []);
-
-  const handleEdit = (_id: string) => {
-    // Logika untuk edit
+    }
   };
 
-  const handleDelete = (_id: string) => {
-    // Logika untuk delete
+  const handleCloseSnackbar = () => {
+    setIsSnackbarOpen(false);
   };
 
-  const handlePageChange = (_event: unknown, newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setItemsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(0);
+  const handleEditClick = (id: number) => {
+    navigate(`/master-product/units/update/${id}`);
   };
 
   return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'white' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                ID
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Name
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Description
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Status
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Actions
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {units.length > 0 ? (
-            units
-              .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-              .map((unit) => (
+    <Paper>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  No
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Name
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Description
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Actions
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tableData?.length > 0 ? (
+              tableData.map((unit, index) => (
                 <TableRow key={unit.id}>
-                  <TableCell>{unit.id}</TableCell>
+                  <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
                   <TableCell>{unit.name}</TableCell>
                   <TableCell>{unit.description}</TableCell>
-                  <TableCell>{unit.status}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleEdit(unit.id)}>Edit</Button>
-                    <Button onClick={() => handleDelete(unit.id)}>Delete</Button>
+                    <IconButton
+                      onClick={() => handleEditClick(unit.id)}
+                      color="primary"
+                      aria-label="edit"
+                    >
+                      <img src={EditIcon} alt="edit icon" width="24" height="24" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openDeleteModal(unit.id)}
+                      color="secondary"
+                      aria-label="delete"
+                    >
+                      <img src={DeleteIcon} alt="delete icon" width="24" height="24" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
-          ) : (
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  <Typography>No units available.</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
             <TableRow>
-              <TableCell colSpan={5} align="center">
-                <Typography>No units available.</Typography>
-              </TableCell>
+              <TablePagination
+                count={totalItems}
+                page={currentPage - 1}
+                onPageChange={(_, page) => handlePageChange(page + 1)}
+                rowsPerPage={itemsPerPage}
+                onRowsPerPageChange={(event) => setItemsPerPage(parseInt(event.target.value, 10))}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              count={totalItems}
-              page={currentPage}
-              onPageChange={handlePageChange}
-              rowsPerPage={itemsPerPage}
-              onRowsPerPageChange={handleRowsPerPageChange}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+
+      <ConfirmationDialog
+        open={isModalOpen}
+        title="Are you sure you want to delete this unit?"
+        onConfirm={confirmDelete}
+        onClose={closeModal}
+      />
+
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Unit deleted successfully!
+        </Alert>
+      </Snackbar>
+    </Paper>
   );
 };
 

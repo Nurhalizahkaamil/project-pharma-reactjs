@@ -32,7 +32,7 @@ const InventoriesTable = () => {
     const fetchInventories = async () => {
       try {
         const response = await axios.get('/api/inventories'); // Ganti dengan endpoint API Anda
-        setInventories(response.data);  // Perbaikan: setInventories, bukan memanggil fetchInventories lagi
+        setInventories(response.data); // Perbaikan: setInventories, bukan memanggil fetchInventories lagi
         setTotalItems(response.data.length); // Set total items
       } catch (error) {
         console.error('Error fetching Inventories:', error);
@@ -46,7 +46,7 @@ const InventoriesTable = () => {
     // Logika untuk edit inventories
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (_id: string) => {
     // Logika untuk delete inventories
   };
 

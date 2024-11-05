@@ -9,7 +9,7 @@ const NavItems = () => {
       sx={{
         display: 'inline-flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: 0,
       }}
     >
       {sitemap.map((navItem) => (
