@@ -1,13 +1,12 @@
 import { Stack, Typography, Card, CardContent, Box } from '@mui/material';
 import { Fragment } from 'react/jsx-runtime';
 
-// Import gambar png
-import DashboardImage from '/src/assets/grafik.png'; // Sesuaikan path ke gambar yang di-upload
+import DashboardImage from '/src/assets/grafik.png';
 
 const WelcomeUser = () => {
   return (
     <Fragment>
-      {/* Card untuk teks sapaan */}
+      {/* Card untuk dashboard welcome */}
       <Card
         sx={{
           background: 'linear-gradient(135deg, #08B6AB 18%, #0F8A95 61%, #156984 100%)',

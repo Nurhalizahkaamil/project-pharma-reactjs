@@ -49,12 +49,6 @@ const CategoriesPage = () => {
     fetchDataPage();
   }, [currentPage, searchTerm, itemsPerPage]);
 
-  // Function for Edit
-  const handleEdit = (id: number) => {
-    console.log('Edit:', id);
-    navigate(`/update-category/${id}`); // Navigate to the edit category page
-  };
-
   // Function for Delete
   const handleDelete = async (id: number) => {
     console.log('Delete:', id);

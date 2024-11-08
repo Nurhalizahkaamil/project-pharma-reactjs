@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 
 const WarehousesPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [tableData, setTableData] = useState<WarehouseDtoOut[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);

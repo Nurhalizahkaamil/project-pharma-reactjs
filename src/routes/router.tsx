@@ -1,9 +1,9 @@
-import { Suspense, lazy } from 'react';
+import { Children, Suspense, lazy } from 'react';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import paths, { rootPaths } from './paths';
 import PageLoader from 'components/loading/PageLoader';
 import Progress from 'components/loading/Progress';
-import Dashboard from 'pages/admingudang/dashboard/Dashboard';
+import Dashboard from 'pages/dashboard/Dashboard';
 import WarehousePage from 'pages/admingudang/master inventory/warehouse/WarehousePage';
 import InventoriesPage from 'pages/admingudang/master inventory/inventory/InventoriesPages';
 import CategoriesFormPage from 'pages/admingudang/master product/categories/FormCreate';
@@ -23,6 +23,12 @@ import UpdateDoctorForm from 'pages/admingudang/master data/doctor/UpdateDoctor'
 import UpdateWarehouse from 'pages/admingudang/master inventory/warehouse/UpdateWarehouse';
 import ProductFormPage from 'pages/admingudang/master product/products/FormProduct';
 import ProductUpdateFormPage from 'pages/admingudang/master product/products/UpdateProducts';
+import ChooseTransactionPage from 'pages/apoteker/transactions/transactionspages';
+import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
+import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
+// import Transactions from 'pages/apoteker/transactions/transactionspages';
+// import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
+// import PrescriptionPage from 'pages/transactions/prescription.pages.';
 
 const App = lazy(() => import('App'));
 const MainLayout = lazy(() => import('layouts/main-layout'));
@@ -244,6 +250,37 @@ export const routes = [
           {
             path: paths.updateCustomer,
             element: <UpdateCustomerForm />,
+          },
+        ],
+      },
+      {
+        path: rootPaths.transactions,
+        element: (
+          <MainLayout title="Transactions">
+            <Suspense fallback={<PageLoader />}>
+              <ChooseTransactionPage />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
+
+      {
+        path: rootPaths.prescription,
+        element: (
+          <MainLayout title="Prescription">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+        children: [
+          {
+            path: paths.prescription,
+            element: <PrescriptionsPage />,
+          },
+          {
+            path: paths.createPrescription,
+            element: <PrescriptionForm />,
           },
         ],
       },
