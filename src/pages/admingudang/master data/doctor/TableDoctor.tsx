@@ -35,7 +35,6 @@ export interface DoctorsTableProps {
 
 const DoctorsTable: React.FC<DoctorsTableProps> = ({
   tableData,
-  handleEdit,
   handleDelete,
   currentPage,
   totalItems,

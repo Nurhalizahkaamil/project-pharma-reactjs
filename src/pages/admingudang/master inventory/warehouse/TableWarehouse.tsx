@@ -36,7 +36,6 @@ interface WarehousesTableProps {
 
 const WarehousesTable: React.FC<WarehousesTableProps> = ({
   tableData,
-  handleEdit,
   handleDelete,
   currentPage,
   totalItems,

@@ -6,16 +6,14 @@ import { UnitsDto } from 'Dto/unitsDto/units.dto';
 import { BaseDto } from 'Dto/Base/base.dto';
 import { getUnits } from 'service/units.service'; // Using getUnits for fetching data
 import { toast } from 'react-hot-toast'; // If you want to keep using toast for notifications
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const UnitsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [tableData, setTableData] = useState<UnitsDto[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch data for units table
   const fetchDataPage = async () => {
@@ -50,10 +48,6 @@ const UnitsPage = () => {
   }, [currentPage, searchTerm, itemsPerPage]);
 
   // Function for Edit
-  const handleEdit = (id: number) => {
-    console.log('Edit:', id);
-    navigate(`/update-category/${id}`); // Navigate to the edit category page
-  };
 
   // Function for Delete
   const handleDelete = async (id: number) => {
@@ -67,16 +61,8 @@ const UnitsPage = () => {
   };
 
   // Function for searching
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    setCurrentPage(1);
-  };
 
   // Function to reset search
-  const handleResetSearch = () => {
-    setSearchTerm('');
-    setCurrentPage(1);
-  };
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -95,7 +81,7 @@ const UnitsPage = () => {
         handlePageChange={handlePageChange}
         itemsPerPage={itemsPerPage}
         setItemsPerPage={setItemsPerPage}
-        handleEdit={function (id: number): void {
+        handleEdit={function (_id: number): void {
           throw new Error('Function not implemented.');
         }}
       />

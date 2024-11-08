@@ -1,3 +1,5 @@
+import { create } from "@mui/material/styles/createTransitions";
+
 export const rootPaths = {
   root: '/',
   pagesRoot: 'pages',
@@ -25,6 +27,9 @@ export const rootPaths = {
   customers: 'master-data/customers',
   createCustomer: 'master-data/customers/create',
   updateCustomer: 'master-data/customers/update/:id',
+  transactions: 'transactions',
+  prescription: 'prescriptions',
+  createPrescription: 'prescriptions/create',
 };
 
 export default {
@@ -53,4 +58,7 @@ export default {
   customers: `/${rootPaths.customers}`,
   createCustomer: `/${rootPaths.createCustomer}`,
   updateCustomer: `/${rootPaths.updateCustomer}`,
+  transactions: `/${rootPaths.transactions}`,
+  prescription: `/${rootPaths.prescription}`,
+  createPrescription: `/${rootPaths.createPrescription}`,
 };

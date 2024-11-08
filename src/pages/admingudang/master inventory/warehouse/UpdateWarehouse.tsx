@@ -162,7 +162,7 @@ const WarehouseUpdateFormPage: React.FC = () => {
             <TextField
               select
               fullWidth
-              placeholder='Select Supplier'
+              placeholder="Select Supplier"
               name="supplier"
               value={formData.supplierId}
               onChange={handleChange}

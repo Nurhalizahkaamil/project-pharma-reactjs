@@ -174,7 +174,7 @@ const ProductFormPage: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1" gutterBottom>
-                Product Name
+                Description
               </Typography>
               <TextField
                 fullWidth

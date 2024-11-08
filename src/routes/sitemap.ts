@@ -9,6 +9,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PersonIcon from '@mui/icons-material/Person';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 // Update the type for svgIcon
@@ -118,6 +119,14 @@ const sitemap: MenuItem[] = [
   },
   {
     id: 13,
+    name: 'Transactions',
+    path: '/transactions',
+    pathName: 'transactions',
+    svgIcon: ShoppingCartIcon,
+    active: true,
+  },
+  {
+    id: 14,
     name: 'Report Entry Product',
     path: '/report-entry-product',
     pathName: 'report-entry-product',
@@ -125,7 +134,7 @@ const sitemap: MenuItem[] = [
     active: true,
   },
   {
-    id: 14,
+    id: 15,
     name: 'Profile',
     path: '/profile',
     pathName: 'profile',
@@ -133,7 +142,7 @@ const sitemap: MenuItem[] = [
     active: true,
   },
   {
-    id: 15,
+    id: 16,
     name: 'Sign Out',
     path: '/sign-out',
     pathName: 'sign-out',

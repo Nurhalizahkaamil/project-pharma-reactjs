@@ -35,7 +35,6 @@ export interface SuppliersTableProps {
 
 const SuppliersTable: React.FC<SuppliersTableProps> = ({
   tableData,
-  handleEdit,
   handleDelete,
   currentPage,
   totalItems,

@@ -35,7 +35,6 @@ export interface CustomersTableProps {
 
 const CustomersTable: React.FC<CustomersTableProps> = ({
   tableData,
-  handleEdit,
   handleDelete,
   currentPage,
   totalItems,
