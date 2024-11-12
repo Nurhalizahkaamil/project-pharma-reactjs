@@ -19,6 +19,7 @@ import {
 import { PrescriptionDtoOut } from 'Dto/prescriptions/prescription.dto';
 import { format } from 'date-fns';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { useNavigate } from 'react-router-dom';
 
 interface PrescriptionTableProps {
   tableData: PrescriptionDtoOut[];
@@ -45,6 +46,7 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
 }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('All Prescriptions');
+  const navigate = useNavigate(); // Initialize navigate function
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(event.target.value);
@@ -52,6 +54,12 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
 
   const handleFilterStatusChange = (event: SelectChangeEvent<string>) => {
     setFilterStatus(event.target.value);
+  };
+
+  // Updated handleRedeem function to include navigation
+  const handleRedeemClick = (id: number) => {
+    handleRedeem(id); // Optionally handle redeem logic
+    navigate(`/transactions/prescriptionconfirmpay/${id}`, { state: { prescriptionId: id } }); // Pass prescriptionId to next page
   };
 
   return (
@@ -81,9 +89,9 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
           size="small"
           sx={{ width: '200px' }}
         >
-          <MenuItem value="All Prescriptions">All Prescription</MenuItem>
+          <MenuItem value="All Prescriptions">All Prescriptions</MenuItem>
           <MenuItem value="Redeemed">Already Redeemed</MenuItem>
-          <MenuItem value="Not Redeemed">unredeemed</MenuItem>
+          <MenuItem value="Not Redeemed">Unredeemed</MenuItem>
         </Select>
       </div>
 
@@ -120,11 +128,10 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
                   <TableCell>{prescription.prescriptionCode}</TableCell>
                   <TableCell>{prescription.customer.name}</TableCell>
                   <TableCell>{prescription.doctor.name}</TableCell>
-
                   <TableCell>{prescription.prescriptions}</TableCell>
                   <TableCell>
                     <Chip
-                      label={prescription.isRedeem ? 'already redeemed' : 'unredeemed'}
+                      label={prescription.isRedeem ? 'Already Redeemed' : 'Unredeemed'}
                       color={prescription.isRedeem ? 'success' : 'error'}
                       size="small"
                       sx={{ color: '#fff' }}
@@ -144,7 +151,7 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
                       variant="contained"
                       color="success"
                       size="small"
-                      onClick={() => handleRedeem(prescription.id!)}
+                      onClick={() => handleRedeemClick(prescription.id!)} // Use handleRedeemClick
                     >
                       Redeem
                     </Button>

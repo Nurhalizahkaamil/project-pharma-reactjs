@@ -18,6 +18,7 @@ const CUSTOMER_API_URL = `${import.meta.env.VITE_PUBLIC_SERVER}/customers`;
 export const getPrescriptions = async (
   params: BaseDto,
 ): Promise<{
+  length: number;
   totalItems(totalItems: any): unknown;
   data: PrescriptionDtoOut[];
   metadata: { total: number; totalPages: number };
@@ -106,9 +107,6 @@ export const getPrescriptionById = async (id: number): Promise<PrescriptionDtoOu
   }
 };
 
-// Fetch all doctors
-// Fetch all doctors
-// Fetch all doctors
 export const getDoctors = async (): Promise<DoctorDtoOut[]> => {
   try {
     const response = await axios.get(DOCTOR_API_URL, {

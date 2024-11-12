@@ -120,7 +120,7 @@ const sitemap: MenuItem[] = [
   {
     id: 13,
     name: 'Transactions',
-    path: '/transactions',
+    path: paths.chooseTransaction,
     pathName: 'transactions',
     svgIcon: ShoppingCartIcon,
     active: true,
