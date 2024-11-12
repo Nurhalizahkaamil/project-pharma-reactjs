@@ -29,14 +29,16 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle, title }: TopbarProps) => {
         <Toolbar
           sx={{
             justifyContent: 'space-between',
-            gap: { xs: 1, sm: 5 },
+            gap: { xs: 2, sm: 7 },
             minHeight: '90px',
             bgcolor: 'background.default',
+            flexDirection: 'row',
           }}
         >
           <Stack
             direction="row"
             alignItems="center"
+            spacing={1}
             columnGap={{ xs: 1, sm: 2 }}
             sx={{ display: { lg: 'none' } }}
           >
@@ -57,9 +59,12 @@ const Topbar = ({ drawerWidth, onHandleDrawerToggle, title }: TopbarProps) => {
             <Typography
               variant="h3"
               color="primary.darker"
-              sx={{ display: { xs: 'none', lg: 'block' } }}
+              sx={{
+                display: { xs: 'none', lg: 'block' },
+                whiteSpace: 'nowrap',
+              }}
             >
-              {title} {/* Tampilkan title di sini */}
+              {title}
             </Typography>
           )}
 

@@ -2,6 +2,7 @@ import { CustomerDto } from 'Dto/customer/customer.dto';
 import { DoctorDtoOut } from 'Dto/doctor/doctor.dto';
 
 export interface PrescriptionDtoOut {
+  [x: string]: any;
   statusCode: number;
   id?: number;
   prescriptionCode: string;

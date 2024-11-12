@@ -23,10 +23,11 @@ import UpdateDoctorForm from 'pages/admingudang/master data/doctor/UpdateDoctor'
 import UpdateWarehouse from 'pages/admingudang/master inventory/warehouse/UpdateWarehouse';
 import ProductFormPage from 'pages/admingudang/master product/products/FormProduct';
 import ProductUpdateFormPage from 'pages/admingudang/master product/products/UpdateProducts';
-import ChooseTransactionPage from 'pages/apoteker/transactions/transactionspages';
+import ChooseTransactionPage from 'pages/apoteker/transactions/choose.transactionspages';
 import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
 import TransactionPrescriptionForm from 'pages/apoteker/transactions/transprescription.confirmpay';
+import GeneralTransactionForm from 'pages/apoteker/transactions/generic.transaction';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -269,12 +270,21 @@ export const routes = [
             element: <ChooseTransactionPage />,
           },
           {
-            path: paths.transactionspayment,
-            element: <TransactionPrescriptionForm />,
+            path: paths.generictransaction,
+            element: <GeneralTransactionForm />,
           },
         ],
       },
-
+      {
+        path: rootPaths.transactionspayment,
+        element: (
+          <MainLayout title="Prescription Redeemtion">
+            <Suspense fallback={<PageLoader />}>
+              <TransactionPrescriptionForm />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
       {
         path: rootPaths.prescription,
         element: (

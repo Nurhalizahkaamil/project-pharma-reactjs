@@ -26,9 +26,11 @@ const ProductsPage = () => {
       const productsResponse = await getProducts(params);
 
       if (productsResponse && productsResponse.data && Array.isArray(productsResponse.data)) {
-        const totalItemsNumber = Number(productsResponse.totalItems) || 0;
+        const totalItemsNumber = productsResponse.metadata?.total || 0;
+        const totalPagesNumber = productsResponse.metadata?.totalPages || 0;
+
         setTotalItems(totalItemsNumber);
-        setTotalPages(Math.ceil(totalItemsNumber / itemsPerPage));
+        setTotalPages(totalPagesNumber);
         setTableData(productsResponse.data);
       } else {
         console.error('Unexpected response format for products:', productsResponse);

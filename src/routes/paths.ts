@@ -1,5 +1,5 @@
-import { create } from "@mui/material/styles/createTransitions";
-import ChooseTransactionPage from "pages/apoteker/transactions/transactionspages";
+import { create } from '@mui/material/styles/createTransitions';
+import ChooseTransactionPage from 'pages/apoteker/transactions/choose.transactionspages';
 
 export const rootPaths = {
   root: '/',
@@ -31,6 +31,7 @@ export const rootPaths = {
   transactions: 'transactions',
   chooseTransaction: 'transactions/choose',
   transactionspayment: 'transactions/prescriptionconfirmpay/:id',
+  generictransaction: 'transactions/generaltransaction/:id',
   prescription: 'prescriptions',
   createPrescription: 'prescriptions/create',
 };
@@ -64,6 +65,7 @@ export default {
   transactions: `/${rootPaths.transactions}`,
   chooseTransaction: `/${rootPaths.chooseTransaction}`,
   transactionspayment: `/${rootPaths.transactionspayment}`,
+  generictransaction: `/${rootPaths.generictransaction}`,
   prescription: `/${rootPaths.prescription}`,
   createPrescription: `/${rootPaths.createPrescription}`,
 };

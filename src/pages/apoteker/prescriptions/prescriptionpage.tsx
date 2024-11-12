@@ -54,7 +54,6 @@ const PrescriptionsPage = () => {
     fetchDataPage();
   }, [currentPage, searchTerm, itemsPerPage, filterStatus]);
 
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };

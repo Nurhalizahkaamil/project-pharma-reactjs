@@ -20,26 +20,29 @@ const ChooseTransactionPage: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: '20px',
-        minHeight: '2vh',
+        minHeight: '100vh',
       }}
     >
-      <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 1 }}>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1, textAlign: 'center' }}>
         Choose Transactions
       </Typography>
-      <Typography variant="subtitle1" sx={{ color: '#888', mb: 4 }}>
+      <Typography variant="subtitle1" sx={{ color: '#888', mb: 4, textAlign: 'center' }}>
         Select the transaction you want
       </Typography>
 
       <Box
         sx={{
           display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
           gap: '20px',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         {/* General Transactions Card */}
         <Card
           sx={{
-            width: '350px',
+            width: { xs: '100%', md: '350px' },
             height: '300px',
             display: 'flex',
             flexDirection: 'column',
@@ -50,11 +53,12 @@ const ChooseTransactionPage: React.FC = () => {
             boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
             position: 'relative',
             overflow: 'visible',
+            mx: { xs: 0, md: 2 },
           }}
         >
           <CardContent sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-              General Transactions
+              Generic Transactions
             </Typography>
             <Button
               variant="contained"
@@ -64,7 +68,7 @@ const ChooseTransactionPage: React.FC = () => {
                 textTransform: 'none',
                 px: 4,
               }}
-              //onClick={() => handleNavigate(paths.general)} // Use the navigate function here
+              onClick={() => handleNavigate(paths.generictransaction)}
             >
               Choose
             </Button>
@@ -88,7 +92,7 @@ const ChooseTransactionPage: React.FC = () => {
         {/* Doctor's Prescription Transactions Card */}
         <Card
           sx={{
-            width: '350px',
+            width: { xs: '100%', md: '350px' },
             height: '300px',
             display: 'flex',
             flexDirection: 'column',
@@ -99,6 +103,7 @@ const ChooseTransactionPage: React.FC = () => {
             boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
             position: 'relative',
             overflow: 'visible',
+            mx: { xs: 0, md: 2 },
           }}
         >
           <CardContent sx={{ textAlign: 'center' }}>
@@ -113,7 +118,7 @@ const ChooseTransactionPage: React.FC = () => {
                 textTransform: 'none',
                 px: 4,
               }}
-              onClick={() => handleNavigate(paths.prescription)} // Use the navigate function here
+              onClick={() => handleNavigate(paths.prescription)}
             >
               Choose
             </Button>
