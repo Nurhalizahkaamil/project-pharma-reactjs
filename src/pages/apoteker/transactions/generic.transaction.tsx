@@ -17,13 +17,37 @@ interface SelectedProduct extends ProductDtoOut {
   subtotal: number;
 }
 
-const TransactionForm: React.FC = () => {
+const GenericTransactionForm: React.FC = () => {
   const [productSearch, setProductSearch] = useState('');
   const [products, setProducts] = useState<ProductDtoOut[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductDtoOut[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
+  const [transactionCode, setTransactionCode] = useState('');
+  const [transactionDate, setTransactionDate] = useState('');
+
+  // Generate a random transaction code
+  const generateTransactionCode = () => {
+    return 'TRX-' + Math.floor(100000 + Math.random() * 900000); // Example: TRX-123456
+  };
+
+  useEffect(() => {
+    // Set the transaction code and date with AM/PM format
+    setTransactionCode(generateTransactionCode());
+    const today = new Date();
+    const formattedDate = today.toLocaleString('en-US', {
+      weekday: 'short', // Optional: Display the day of the week (e.g., Mon, Tue)
+      year: 'numeric',
+      month: 'short', // Month as a short name (e.g., Jan, Feb)
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true, // Ensure AM/PM format
+    });
+    setTransactionDate(formattedDate);
+  }, []);
 
   // Fetch product list
   useEffect(() => {
@@ -99,6 +123,27 @@ const TransactionForm: React.FC = () => {
 
   return (
     <div>
+      {/* Display transaction date and code */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          padding: '10px',
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          boxShadow: '0 2px 2px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <div style={{ color: '#007BCE' }}>
+          <strong>{transactionDate}</strong>
+        </div>
+        <div style={{ color: '#007BCE' }}>
+          <strong>Transaction Code: {transactionCode}</strong>
+        </div>
+      </div>
+
       <h3>Search and Add Products Here</h3>
       <input
         type="text"
@@ -233,4 +278,4 @@ const TransactionForm: React.FC = () => {
   );
 };
 
-export default TransactionForm;
+export default GenericTransactionForm;

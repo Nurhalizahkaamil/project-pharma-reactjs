@@ -8,6 +8,7 @@ export enum DrugClass {
 }
 
 export interface ProductDtoOut {
+  code: string;
   id: number; // Made optional as per backend definition
   productCode: string;
   name: string;

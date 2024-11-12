@@ -1,23 +1,19 @@
-// src/dto/transactions/transaction.dto.ts
 import { UUID } from 'crypto';
 import { PrescriptionRedemptionDtoOut } from 'Dto/prescriptions/redeemtion.dto';
 
 export enum TransactionType {
-  PURCHASE = 'Purchase',
-  SALE = 'Sale',
+  PURCHASE = 'Genereric',
+  SALE = 'Prescription',
 }
 
 export enum CategoryType {
-  MEDICINE = 'Medicine',
-  SUPPLY = 'Supply',
-  SERVICE = 'Service',
+  IN = 'In',
+  OUT = 'Out',
 }
 
 export enum PaymentMethod {
   CASH = 'Cash',
-  CREDIT_CARD = 'Credit Card',
-  DEBIT_CARD = 'Debit Card',
-  TRANSFER = 'Transfer',
+  DEBIT = 'Debit',
 }
 
 export interface TransactionDtoOut {

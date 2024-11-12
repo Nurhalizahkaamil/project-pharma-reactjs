@@ -60,7 +60,7 @@ const PrescriptionForm: React.FC = () => {
       toast.error('Error fetching doctors');
     }
   };
-  
+
   const fetchCustomers = async () => {
     try {
       const response = await getCustomers();
@@ -76,7 +76,7 @@ const PrescriptionForm: React.FC = () => {
       toast.error('Error fetching customers');
     }
   };
-  
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
@@ -105,7 +105,6 @@ const PrescriptionForm: React.FC = () => {
       toast.error('Failed to create prescription');
     }
   };
-  
 
   const handleClose = () => {
     setOpen(false);

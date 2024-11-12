@@ -123,7 +123,7 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
                 <TableRow key={prescription.id}>
                   <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
                   <TableCell>
-                    {format(new Date(prescription.prescriptionDate), 'dd/MM/yyyy HH:mm')}
+                    {format(new Date(prescription.prescriptionDate), 'dd/MM/yyyy HH:mm a')}
                   </TableCell>
                   <TableCell>{prescription.prescriptionCode}</TableCell>
                   <TableCell>{prescription.customer.name}</TableCell>

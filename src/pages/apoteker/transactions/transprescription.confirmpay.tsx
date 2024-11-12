@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { PrescriptionDtoOut } from 'Dto/prescriptions/prescription.dto';
 import { getPrescriptionById } from 'service/precription.service'; // Make sure the service path is correct
 import PrescriptionInformation from './prescription.information'; // Make sure this import is correct
-import TransactionForm from './transaction.redeem'; // Make sure this import is correct
+import TransactionForm from './table.transaction.redeem'; // Make sure this import is correct
 
 const TransactionPrescriptionForm: React.FC = () => {
   const location = useLocation();
