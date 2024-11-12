@@ -1,4 +1,3 @@
-// src/service/product.service.ts
 import axios from 'axios';
 import { ProductDtoOut, CreateProductDto, UpdateProductDto } from '../Dto/product/product.dto';
 import { CategoriesDto, CategoriesResponse } from '../Dto/categories/categories.dto';
@@ -12,22 +11,21 @@ const UNIT_API_URL = `${import.meta.env.VITE_PUBLIC_SERVER}/units`;
 
 // Fetch all products with pagination metadata
 export const getProducts = async (
-  params: BaseDto,
-): Promise<{
-  totalItems(totalItems: any): unknown;
-  data: ProductDtoOut[];
-  metadata: { total: number; totalPages: number };
-}> => {
+  params?: BaseDto,
+): Promise<{ data: ProductDtoOut[]; metadata: { total: number; totalPages: number } }> => {
   try {
-    const response = await axios.get(API_URL, {
+    const response = await axios.get<{
+      data: ProductDtoOut[];
+      metadata: { total: number; totalPages: number };
+    }>(API_URL, {
       params,
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
     return response.data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
+  } catch (error: any) {
+    console.error('Error fetching products:', error?.response?.data || error.message);
     throw new Error('Failed to fetch products');
   }
 };
@@ -41,8 +39,8 @@ export const createProduct = async (payload: CreateProductDto): Promise<ProductD
       },
     });
     return response.data;
-  } catch (error) {
-    console.error('Error creating product:', error);
+  } catch (error: any) {
+    console.error('Error creating product:', error?.response?.data || error.message);
     throw new Error('Failed to create product');
   }
 };
@@ -59,26 +57,24 @@ export const updateProduct = async (
       },
     });
     return response.data;
-  } catch (error) {
-    console.error('Error updating product:', error);
+  } catch (error: any) {
+    console.error('Error updating product:', error?.response?.data || error.message);
     throw new Error('Failed to update product');
   }
 };
 
 // Delete a product
-export const deleteProduct = async (id: number) => {
+export const deleteProduct = async (id: number): Promise<void> => {
   try {
-    console.log(`Deleting product with ID ${id}`); // Log ID
-    const response = await axios.delete(`${API_URL}/${id}`, {
+    await axios.delete(`${API_URL}/${id}`, {
       headers: {
-        Authorization: `Bearer ${getAccessToken()}`, // Sertakan token di sini
+        Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-    console.log('Product deleted successfully:', response.data); // Log respons
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting supplier:', error.response ? error.response.data : error.message); // Log kesalahan dengan detail
-    throw new Error('Failed to delete supplier');
+    console.log(`Product with ID ${id} deleted successfully`);
+  } catch (error: any) {
+    console.error('Error deleting product:', error?.response?.data || error.message);
+    throw new Error('Failed to delete product');
   }
 };
 
@@ -91,13 +87,12 @@ export const getProductById = async (id: number): Promise<ProductDtoOut> => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error('Error fetching product by ID:', error);
+  } catch (error: any) {
+    console.error('Error fetching product by ID:', error?.response?.data || error.message);
     throw new Error('Failed to fetch product by ID');
   }
 };
 
-// Fetch all categories
 // Fetch all categories
 export const getCategories = async (): Promise<CategoriesDto[]> => {
   try {
@@ -106,9 +101,9 @@ export const getCategories = async (): Promise<CategoriesDto[]> => {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-    return response.data.data; // Access the 'data' array inside CategoriesResponse
-  } catch (error) {
-    console.error('Error fetching categories:', error);
+    return response.data.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error?.response?.data || error.message);
     throw new Error('Failed to fetch categories');
   }
 };
@@ -121,9 +116,9 @@ export const getUnits = async (): Promise<UnitsDto[]> => {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-    return response.data.data; // Access the 'data' array inside UnitsResponse
-  } catch (error) {
-    console.error('Error fetching units:', error);
+    return response.data.data;
+  } catch (error: any) {
+    console.error('Error fetching units:', error?.response?.data || error.message);
     throw new Error('Failed to fetch units');
   }
 };

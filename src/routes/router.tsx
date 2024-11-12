@@ -26,6 +26,7 @@ import ProductUpdateFormPage from 'pages/admingudang/master product/products/Upd
 import ChooseTransactionPage from 'pages/apoteker/transactions/transactionspages';
 import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
+import TransactionPrescriptionForm from 'pages/apoteker/transactions/transprescription.confirmpay';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -258,10 +259,20 @@ export const routes = [
         element: (
           <MainLayout title="Transactions">
             <Suspense fallback={<PageLoader />}>
-              <ChooseTransactionPage />
+              <Outlet />
             </Suspense>
           </MainLayout>
         ),
+        children: [
+          {
+            path: paths.chooseTransaction,
+            element: <ChooseTransactionPage />,
+          },
+          {
+            path: paths.transactionspayment,
+            element: <TransactionPrescriptionForm />,
+          },
+        ],
       },
 
       {

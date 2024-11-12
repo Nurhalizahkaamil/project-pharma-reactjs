@@ -1,4 +1,5 @@
 import { create } from "@mui/material/styles/createTransitions";
+import ChooseTransactionPage from "pages/apoteker/transactions/transactionspages";
 
 export const rootPaths = {
   root: '/',
@@ -28,6 +29,8 @@ export const rootPaths = {
   createCustomer: 'master-data/customers/create',
   updateCustomer: 'master-data/customers/update/:id',
   transactions: 'transactions',
+  chooseTransaction: 'transactions/choose',
+  transactionspayment: 'transactions/prescriptionconfirmpay/:id',
   prescription: 'prescriptions',
   createPrescription: 'prescriptions/create',
 };
@@ -59,6 +62,8 @@ export default {
   createCustomer: `/${rootPaths.createCustomer}`,
   updateCustomer: `/${rootPaths.updateCustomer}`,
   transactions: `/${rootPaths.transactions}`,
+  chooseTransaction: `/${rootPaths.chooseTransaction}`,
+  transactionspayment: `/${rootPaths.transactionspayment}`,
   prescription: `/${rootPaths.prescription}`,
   createPrescription: `/${rootPaths.createPrescription}`,
 };
