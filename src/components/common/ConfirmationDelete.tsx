@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogTitle, Button, Box } from '@mui/material';
-import WarningIcon from 'assets/VectorIcon.png'; // Ganti dengan path ikon yang sesuai
+import WarningIcon from 'assets/VectorIcon.png';
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -23,7 +23,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: '16px', // Border-radius untuk melengkungkan sudut pop-up
+          borderRadius: '16px',
           padding: '16px',
         },
       }}
@@ -51,9 +51,9 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             sx={{
               marginRight: '8px',
               padding: '8px 16px',
-              borderRadius: '8px', // Border-radius untuk tombol Cancel
-              color: '#2A8DDA', // Warna text tombol Cancel
-              borderColor: '#2A8DDA', // Warna border tombol Cancel
+              borderRadius: '8px',
+              color: '#2A8DDA',
+              borderColor: '#2A8DDA',
               '&:hover': {
                 backgroundColor: 'rgba(42, 141, 218, 0.1)', // Background hover untuk tombol Cancel
                 borderColor: '#2A8DDA',
@@ -67,10 +67,10 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             variant="contained"
             sx={{
               padding: '8px 16px',
-              borderRadius: '8px', // Border-radius untuk tombol Delete
-              backgroundColor: '#E50C10', // Warna background tombol Delete
+              borderRadius: '8px',
+              backgroundColor: '#E50C10',
               '&:hover': {
-                backgroundColor: '#D10B0C', // Warna background hover tombol Delete
+                backgroundColor: '#D10B0C',
               },
             }}
           >

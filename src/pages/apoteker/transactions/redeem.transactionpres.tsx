@@ -11,6 +11,8 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PaymentPopup from './payment';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
 
 interface SelectedProduct extends ProductDtoOut {
   quantity: number;
@@ -24,6 +26,7 @@ const TransactionForm: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
+  const [isPaymentPopupOpen, setIsPaymentPopupOpen] = useState(false);
 
   // Fetch product list
   useEffect(() => {
@@ -37,7 +40,7 @@ const TransactionForm: React.FC = () => {
     };
     fetchProducts();
   }, []);
- 
+
   useEffect(() => {
     // Filter products based on the search query
     if (productSearch.trim()) {
@@ -62,6 +65,7 @@ const TransactionForm: React.FC = () => {
         { ...product, quantity: 1, subtotal: product.sellingPrice },
       ]);
     }
+    setProductSearch('');
   };
 
   const handleRemoveProduct = (productId: number) => {
@@ -95,6 +99,15 @@ const TransactionForm: React.FC = () => {
   const closeDialog = () => {
     setOpenDialog(false);
     setProductToDelete(null);
+  };
+
+  const handlePurchaseClick = () => {
+    setIsPaymentPopupOpen(true);
+  };
+
+  // Close the PaymentPopup
+  const closePaymentPopup = () => {
+    setIsPaymentPopupOpen(false);
   };
 
   return (
@@ -199,36 +212,34 @@ const TransactionForm: React.FC = () => {
         <strong>Total: Rp {calculateGrandTotal().toLocaleString()}</strong>
       </div>
 
-      <button
+      <Button
+        onClick={handlePurchaseClick}
+        variant="contained"
+        color="primary"
         style={{
           padding: '10px 20px',
           marginTop: '20px',
           backgroundColor: '#00bfa5',
-          color: '#fff',
+          color: 'white',
           border: 'none',
           cursor: 'pointer',
+          float: 'right',
         }}
       >
-        Purchase Rp {calculateGrandTotal().toLocaleString()}
-      </button>
+        Purchase
+      </Button>
 
-      {/* Confirmation Dialog */}
-      <Dialog open={openDialog} onClose={closeDialog}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this product from the transaction?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => handleRemoveProduct(productToDelete!)} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Use the ConfirmationDialog component */}
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={closeDialog}
+        onConfirm={() => productToDelete && handleRemoveProduct(productToDelete)}
+        title={'Are you sure you want to delete this prescription transactions?'}
+      />
+      {/* PaymentPopup component */}
+      {isPaymentPopupOpen && (
+        <PaymentPopup grandTotal={calculateGrandTotal()} onClose={closePaymentPopup} />
+      )}
     </div>
   );
 };
