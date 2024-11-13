@@ -2,8 +2,8 @@ import { UUID } from 'crypto';
 import { PrescriptionRedemptionDtoOut } from 'Dto/prescriptions/redeemtion.dto';
 
 export enum TransactionType {
-  PURCHASE = 'Genereric',
-  SALE = 'Prescription',
+  GENERIC = 'Genereric',
+  PRESCRIPTION = 'Prescription',
 }
 
 export enum CategoryType {

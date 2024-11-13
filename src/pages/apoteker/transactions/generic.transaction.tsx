@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { ProductDtoOut } from 'Dto/product/product.dto';
 import { getProducts } from 'service/product.service';
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Button,
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PaymentPopup from 'pages/apoteker/transactions/payment';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
 
 interface SelectedProduct extends ProductDtoOut {
   quantity: number;
@@ -26,28 +23,33 @@ const GenericTransactionForm: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
   const [transactionCode, setTransactionCode] = useState('');
   const [transactionDate, setTransactionDate] = useState('');
+  const [transactionCount] = useState(1);
+  const [isPaymentPopupOpen, setIsPaymentPopupOpen] = useState(false); // New state for PaymentPopup
 
   // Generate a random transaction code
   const generateTransactionCode = () => {
-    return 'TRX-' + Math.floor(100000 + Math.random() * 900000); // Example: TRX-123456
+    const today = new Date();
+    const datePart = today.toISOString().split('T')[0].replace(/-/g, ''); // yyyymmdd
+    const transactionOrder = String(transactionCount).padStart(3, '0'); // 3-digit order
+
+    return `TRX-${datePart}-${transactionOrder}`;
   };
 
   useEffect(() => {
-    // Set the transaction code and date with AM/PM format
+    // Set the transaction code and date
     setTransactionCode(generateTransactionCode());
-    const today = new Date();
-    const formattedDate = today.toLocaleString('en-US', {
-      weekday: 'short', // Optional: Display the day of the week (e.g., Mon, Tue)
-      year: 'numeric',
-      month: 'short', // Month as a short name (e.g., Jan, Feb)
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true, // Ensure AM/PM format
-    });
-    setTransactionDate(formattedDate);
-  }, []);
+    setTransactionDate(
+      new Date().toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      }),
+    );
+  }, [transactionCount]);
 
   // Fetch product list
   useEffect(() => {
@@ -86,6 +88,7 @@ const GenericTransactionForm: React.FC = () => {
         { ...product, quantity: 1, subtotal: product.sellingPrice },
       ]);
     }
+    setProductSearch('');
   };
 
   const handleRemoveProduct = (productId: number) => {
@@ -119,6 +122,16 @@ const GenericTransactionForm: React.FC = () => {
   const closeDialog = () => {
     setOpenDialog(false);
     setProductToDelete(null);
+  };
+
+  // Open the PaymentPopup when purchase is clicked
+  const handlePurchaseClick = () => {
+    setIsPaymentPopupOpen(true);
+  };
+
+  // Close the PaymentPopup
+  const closePaymentPopup = () => {
+    setIsPaymentPopupOpen(false);
   };
 
   return (
@@ -235,45 +248,41 @@ const GenericTransactionForm: React.FC = () => {
           Subtotal: Rp{' '}
           {selectedProducts.reduce((sum, product) => sum + product.subtotal, 0).toLocaleString()}
         </p>
+        <p>PPN 10%: Rp {(calculateGrandTotal() * 0.1).toLocaleString()}</p>
         <p>
-          PPN 10%: Rp{' '}
-          {(
-            selectedProducts.reduce((sum, product) => sum + product.subtotal, 0) * 0.1
-          ).toLocaleString()}
+          Grand Total: Rp <strong>{calculateGrandTotal().toLocaleString()}</strong>
         </p>
-        <strong>Total: Rp {calculateGrandTotal().toLocaleString()}</strong>
       </div>
 
-      <button
+      <Button
+        onClick={handlePurchaseClick}
+        variant="contained"
+        color="primary"
         style={{
           padding: '10px 20px',
           marginTop: '20px',
           backgroundColor: '#00bfa5',
-          color: '#fff',
+          color: 'white',
           border: 'none',
           cursor: 'pointer',
+          float: 'right',
         }}
       >
-        Purchase Rp {calculateGrandTotal().toLocaleString()}
-      </button>
+        Purchase
+      </Button>
 
-      {/* Confirmation Dialog */}
-      <Dialog open={openDialog} onClose={closeDialog}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this product from the transaction?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => handleRemoveProduct(productToDelete!)} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Use the ConfirmationDialog component */}
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={closeDialog}
+        onConfirm={() => productToDelete && handleRemoveProduct(productToDelete)}
+        title={'Are you sure you want to delete this transactions?'}
+      />
+
+      {/* PaymentPopup component */}
+      {isPaymentPopupOpen && (
+        <PaymentPopup grandTotal={calculateGrandTotal()} onClose={closePaymentPopup} />
+      )}
     </div>
   );
 };

@@ -4,12 +4,18 @@ import { Box, Button, Typography, Card, CardContent } from '@mui/material';
 import CommonTransactionsImage from '/src/assets/general.png';
 import PrescriptionTransactionsImage from '/src/assets/prescription.png';
 import paths from 'routes/paths';
+import { TransactionType } from 'Dto/transaction/transaction.dto'; // Import the TransactionType enum
 
 const ChooseTransactionPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleNavigate = (path: string) => {
-    navigate(path);
+  // Navigate function now accepts transaction type and redirects accordingly
+  const handleNavigate = (transactionType: TransactionType) => {
+    if (transactionType === TransactionType.GENERIC) {
+      navigate(paths.generictransaction); // Navigate to the generic transaction page
+    } else if (transactionType === TransactionType.PRESCRIPTION) {
+      navigate(paths.prescription); // Navigate to the prescription transaction page
+    }
   };
 
   return (
@@ -68,7 +74,7 @@ const ChooseTransactionPage: React.FC = () => {
                 textTransform: 'none',
                 px: 4,
               }}
-              onClick={() => handleNavigate(paths.generictransaction)}
+              onClick={() => handleNavigate(TransactionType.GENERIC)} // Use the enum value
             >
               Choose
             </Button>
@@ -118,7 +124,7 @@ const ChooseTransactionPage: React.FC = () => {
                 textTransform: 'none',
                 px: 4,
               }}
-              onClick={() => handleNavigate(paths.prescription)}
+              onClick={() => handleNavigate(TransactionType.PRESCRIPTION)} // Use the enum value
             >
               Choose
             </Button>

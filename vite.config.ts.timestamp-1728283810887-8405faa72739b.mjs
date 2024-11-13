@@ -21,7 +21,7 @@ var vite_config_default = defineConfig({
     host: "0.0.0.0",
     port: 3002
   },
-  base: "/inventory"
+  base: "/"
 });
 export {
   vite_config_default as default

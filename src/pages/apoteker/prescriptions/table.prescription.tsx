@@ -47,6 +47,7 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
   const [searchKeyword, setSearchKeyword] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('All Prescriptions');
   const navigate = useNavigate(); // Initialize navigate function
+  const [redeemed, setRedeemed] = useState(false);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(event.target.value);
@@ -60,6 +61,7 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
   const handleRedeemClick = (id: number) => {
     handleRedeem(id); // Optionally handle redeem logic
     navigate(`/transactions/prescriptionconfirmpay/${id}`, { state: { prescriptionId: id } }); // Pass prescriptionId to next page
+    setRedeemed(true);
   };
 
   return (
@@ -133,28 +135,51 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
                     <Chip
                       label={prescription.isRedeem ? 'Already Redeemed' : 'Unredeemed'}
                       color={prescription.isRedeem ? 'success' : 'error'}
-                      size="small"
-                      sx={{ color: '#fff' }}
+                      size="small" // Base size
+                      sx={{
+                        color: '#fff', // Text color
+                        fontSize: '0.75rem', // Smaller font size
+                        height: '20px', // Reduced height
+                        padding: '0 6px', // Smaller padding for the left and right
+                        '& .MuiChip-label': {
+                          padding: '0 4px', // Adjust padding inside the label
+                        },
+                      }}
                     />
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="contained"
-                      color="info"
-                      size="small"
-                      sx={{ marginRight: '8px' }}
-                      onClick={() => handleDetail(prescription.id!)}
-                    >
-                      Detail
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      onClick={() => handleRedeemClick(prescription.id!)} // Use handleRedeemClick
-                    >
-                      Redeem
-                    </Button>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Button
+                        variant="outlined" // Outline style for Detail button with blue border and text
+                        size="small"
+                        sx={{
+                          marginRight: '8px',
+                          color: 'blue', // Blue text color
+                          borderColor: 'blue', // Blue border
+                          '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 255, 0.1)', // Light blue hover effect
+                          },
+                        }}
+                        onClick={() => handleDetail(prescription.id!)}
+                      >
+                        Detail
+                      </Button>
+
+                      <Button
+                        variant="contained" // Filled style for Redeem button
+                        size="small"
+                        sx={{
+                          backgroundColor: 'blue', // Full blue background
+                          color: 'white', // White text
+                          '&:hover': {
+                            backgroundColor: 'darkblue', // Darker blue on hover
+                          },
+                        }}
+                        onClick={() => handleRedeemClick(prescription.id!)}
+                      >
+                        Redeem
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

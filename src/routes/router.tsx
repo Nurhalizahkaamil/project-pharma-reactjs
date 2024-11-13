@@ -28,6 +28,7 @@ import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
 import TransactionPrescriptionForm from 'pages/apoteker/transactions/transprescription.confirmpay';
 import GeneralTransactionForm from 'pages/apoteker/transactions/generic.transaction';
+import PaymentPopup from 'pages/apoteker/transactions/payment';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -272,6 +273,17 @@ export const routes = [
           {
             path: paths.generictransaction,
             element: <GeneralTransactionForm />,
+          },
+          {
+            path: paths.PaymentPopup,
+            element: (
+              <PaymentPopup
+                grandTotal={0}
+                onClose={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+              />
+            ),
           },
         ],
       },
