@@ -97,7 +97,6 @@ const PrescriptionForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await createPrescription(formData); // Call the actual service function
       toast.success('Prescription created successfully');
       navigate('/prescriptions'); // Navigate to another page if needed after successful creation
     } catch (error) {

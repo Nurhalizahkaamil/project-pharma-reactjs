@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ProductDtoOut } from 'Dto/product/product.dto';
 import { getProducts } from 'service/product.service';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-  IconButton,
-} from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PaymentPopup from './payment';
+import PaymentPopup from '../transactions/payment';
 import ConfirmationDialog from 'components/common/ConfirmationDelete';
+import { TransactionType } from 'Dto/transaction/transaction.dto';
 
 interface SelectedProduct extends ProductDtoOut {
   quantity: number;
@@ -238,7 +231,38 @@ const TransactionForm: React.FC = () => {
       />
       {/* PaymentPopup component */}
       {isPaymentPopupOpen && (
-        <PaymentPopup grandTotal={calculateGrandTotal()} onClose={closePaymentPopup} />
+        <PaymentPopup
+          grandTotal={calculateGrandTotal()}
+          onClose={closePaymentPopup}
+          open={false}
+          transactionType={TransactionType.PRESCRIPTION}
+          onPaymentConfirmed={function (paymentData: {
+            paymentMethod: string;
+            amount: number;
+            change: number;
+            note: string;
+          }): void {
+            throw new Error('Function not implemented.');
+          }}
+          paymentDetails={{
+            paymentMethod: '',
+            amount: 0,
+            change: 0,
+            note: '',
+          }}
+          setPaymentDetails={function (
+            value: React.SetStateAction<{
+              paymentMethod: string;
+              amount: number;
+              change: number;
+              note: string;
+            }>,
+          ): void {
+            throw new Error('Function not implemented.');
+          }}
+          userId={null}
+          selectedProducts={[]}
+        />
       )}
     </div>
   );
