@@ -32,10 +32,12 @@ export const rootPaths = {
   transactions: 'transactions',
   chooseTransaction: 'transactions/choose',
   transactionspayment: 'transactions/prescriptionconfirmpay/:id',
-  generictransaction: 'transactions/generaltransaction/:id',
-  PaymentPopup: 'transactions/payment/:id',
+  generictransaction: 'transactions/generaltransaction',
+  PaymentPopup: 'transactions/payment',
   prescription: 'prescriptions',
   createPrescription: 'prescriptions/create',
+  reportgenerictransaction: 'report/generictransaction',
+  reportprescription: 'report/prescription',
 };
 
 export default {
@@ -71,4 +73,6 @@ export default {
   prescription: `/${rootPaths.prescription}`,
   createPrescription: `/${rootPaths.createPrescription}`,
   PaymentPopup: `/${rootPaths.PaymentPopup}`,
+  reportgenerictransaction: `/${rootPaths.reportgenerictransaction}`,
+  reportprescription: `/${rootPaths.reportprescription}`,
 };

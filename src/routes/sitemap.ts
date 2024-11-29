@@ -127,14 +127,29 @@ const sitemap: MenuItem[] = [
   },
   {
     id: 14,
-    name: 'Report Entry Product',
-    path: '/report-entry-product',
-    pathName: 'report-entry-product',
+    name: 'Report',
+    pathName: 'report',
     svgIcon: AssignmentIcon, // Directly pass the MUI icon component
     active: true,
+    items: [
+      {
+        id: 15,
+        name: 'Report Generic Transaction',
+        path: paths.reportgenerictransaction,
+        pathName: 'report-generic-transaction',
+        active: true,
+      },
+      {
+        id: 16,
+        name: 'Report Prescription Transaction',
+        path: paths.reportprescription,
+        pathName: 'report-prescription',
+        active: true,
+      },
+    ],
   },
   {
-    id: 15,
+    id: 17,
     name: 'Profile',
     path: '/profile',
     pathName: 'profile',
@@ -142,7 +157,7 @@ const sitemap: MenuItem[] = [
     active: true,
   },
   {
-    id: 16,
+    id: 18,
     name: 'Sign Out',
     path: '/sign-out',
     pathName: 'sign-out',

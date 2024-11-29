@@ -1,4 +1,4 @@
-import { Children, Suspense, lazy } from 'react';
+import { Children, SetStateAction, Suspense, lazy } from 'react';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import paths, { rootPaths } from './paths';
 import PageLoader from 'components/loading/PageLoader';
@@ -27,7 +27,7 @@ import ChooseTransactionPage from 'pages/apoteker/transactions/choose.transactio
 import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
 import TransactionPrescriptionForm from 'pages/apoteker/transactions/transprescription.confirmpay';
-import GeneralTransactionForm from 'pages/apoteker/transactions/generic.transaction';
+import GeneralTransactionForm from 'pages/apoteker/generic/generic.transaction';
 import PaymentPopup from 'pages/apoteker/transactions/payment';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
@@ -274,17 +274,6 @@ export const routes = [
             path: paths.generictransaction,
             element: <GeneralTransactionForm />,
           },
-          {
-            path: paths.PaymentPopup,
-            element: (
-              <PaymentPopup
-                grandTotal={0}
-                onClose={function (): void {
-                  throw new Error('Function not implemented.');
-                }}
-              />
-            ),
-          },
         ],
       },
       {
@@ -318,6 +307,26 @@ export const routes = [
         ],
       },
       {
+        path: rootPaths.reportgenerictransaction,
+        element: (
+          <MainLayout title="Report Generic Transactions">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
+      {
+        path: rootPaths.reportprescription,
+        element: (
+          <MainLayout title="Report Prescription Transaction">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
+      {
         path: rootPaths.authRoot,
         element: <AuthLayout />,
         children: [
@@ -339,6 +348,6 @@ export const routes = [
   },
 ];
 
-const router = createBrowserRouter(routes, { basename: '/inventory' });
+const router = createBrowserRouter(routes, { basename: '/' });
 
 export default router;

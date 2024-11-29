@@ -1,14 +1,14 @@
-import { UUID } from 'crypto';
-import { PrescriptionRedemptionDtoOut } from 'Dto/prescriptions/redeemtion.dto';
+import { CreateTransactionDetailDto, TransactionDetailDtoOut } from './transaction.detail.dto';
 
 export enum TransactionType {
-  GENERIC = 'Genereric',
+  GENERIC = 'Generic',
   PRESCRIPTION = 'Prescription',
 }
 
 export enum CategoryType {
   IN = 'In',
   OUT = 'Out',
+  GENERIC = 'Generic',
 }
 
 export enum PaymentMethod {
@@ -17,8 +17,10 @@ export enum PaymentMethod {
 }
 
 export interface TransactionDtoOut {
-  id?: number;
-  userId: UUID;
+  status: number;
+  data: any;
+  id: number;
+  userId: string;
   transactionDate: Date;
   transactionType: TransactionType;
   categoryType: CategoryType;
@@ -27,11 +29,12 @@ export interface TransactionDtoOut {
   subTotal: number;
   grandTotal: number;
   paymentMethod?: PaymentMethod;
-  redemption: PrescriptionRedemptionDtoOut;
+  items: CreateTransactionDetailDto[];
 }
 
 export interface CreateTransactionDto {
-  userId: UUID;
+  id: number;
+  userId: string;
   transactionDate: Date;
   transactionType: TransactionType;
   categoryType: CategoryType;
@@ -40,7 +43,7 @@ export interface CreateTransactionDto {
   subTotal: number;
   grandTotal: number;
   paymentMethod?: PaymentMethod;
-  redemptionId: number;
+  items: TransactionDetailDtoOut[];
 }
 
 export type UpdateTransactionDto = Partial<CreateTransactionDto>;

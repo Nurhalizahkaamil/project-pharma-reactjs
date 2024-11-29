@@ -19,7 +19,7 @@ import paths from 'routes/paths';
 import IconifyIcon from 'components/base/IconifyIcon';
 import PasswordTextField from 'components/common/PasswordTextField';
 import IconKey from 'assets/iconkey.png';
-import { loginUser } from 'service/auth.service';
+import { getCurrentUserId, loginUser } from 'service/auth.service';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
@@ -41,16 +41,21 @@ const SignIn = () => {
     try {
       const data = await loginUser(username, password);
       if (data.accessToken) {
+        // Get user ID from cookie after login
+        const userId = getCurrentUserId();
+        console.log('Logged in user ID:', userId);
+
+        // Store login status and token in local storage or state
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('accessToken', data.accessToken);
-        navigate(paths.dashboard);
+
+        navigate(paths.dashboard); // Navigate to dashboard
       }
     } catch (err) {
-      console.error(err); // Log the error for debugging
-      setError('Incorrect username or password'); // Display error message
+      console.error(err);
+      setError('Incorrect username or password');
     }
   };
-
   return (
     <Box
       sx={{
