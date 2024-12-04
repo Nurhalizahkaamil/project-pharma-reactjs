@@ -8,7 +8,6 @@ export enum TransactionType {
 export enum CategoryType {
   IN = 'In',
   OUT = 'Out',
-  GENERIC = 'Generic',
 }
 
 export enum PaymentMethod {

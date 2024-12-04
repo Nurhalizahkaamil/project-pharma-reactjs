@@ -43,6 +43,7 @@ export const getTransactionById = async (id: number): Promise<TransactionDtoOut>
 };
 
 // Create a new transaction
+// Create a new transaction
 export const createTransaction = async (
   payload: Omit<CreateTransactionDto, 'userId'>,
 ): Promise<TransactionDtoOut> => {
@@ -53,17 +54,22 @@ export const createTransaction = async (
   }
 
   try {
+    const finalPayload = {
+      ...payload,
+      userId, // Inject the current user's ID
+      items: payload.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        note: item.note,
+      })),
+    };
+
+    // Log the payload for debugging
+    console.log('Payload being sent to API:', finalPayload);
+
     const response = await axios.post<TransactionDtoOut>(
       API_URL,
-      {
-        ...payload,
-        userId, // Inject the current user's ID
-        items: payload.items.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          note: item.note,
-        })),
-      },
+      finalPayload,
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
@@ -71,8 +77,9 @@ export const createTransaction = async (
       },
     );
     return response.data;
-  } catch (error) {
-    console.error('Error creating transaction:', error);
+  } catch (error: any) {
+    // Log detailed error response from the backend
+    console.error('Error creating transaction:', error.response?.data || error);
     throw new Error('Failed to create transaction');
   }
 };

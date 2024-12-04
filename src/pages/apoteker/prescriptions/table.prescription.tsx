@@ -166,18 +166,21 @@ const PrescriptionTable: React.FC<PrescriptionTableProps> = ({
                       </Button>
 
                       <Button
-                        variant="contained" // Filled style for Redeem button
+                        variant="contained"
                         size="small"
+                        disabled={prescription.isRedeem && prescription.isPaid} // Disable if redeemed and paid
                         sx={{
-                          backgroundColor: 'blue', // Full blue background
+                          backgroundColor:
+                            prescription.isRedeem && prescription.isPaid ? 'grey' : 'blue', // Grey if redeemed, else blue
                           color: 'white', // White text
                           '&:hover': {
-                            backgroundColor: 'darkblue', // Darker blue on hover
+                            backgroundColor:
+                              prescription.isRedeem && prescription.isPaid ? 'grey' : 'darkblue', // No hover effect if disabled
                           },
                         }}
                         onClick={() => handleRedeemClick(prescription.id!)}
                       >
-                        Redeem
+                        {prescription.isRedeem && prescription.isPaid ? 'Redeemed' : 'Redeem'}
                       </Button>
                     </div>
                   </TableCell>

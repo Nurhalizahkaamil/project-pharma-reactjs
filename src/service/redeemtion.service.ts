@@ -39,14 +39,14 @@ export const getPrescriptionRedemptions = async (
 // Membuat Prescription Redemption
 export const createPrescriptionRedemption = async (
   payload: CreatePrescriptionRedemptionDto,
-): Promise<PrescriptionRedemptionDtoOut> => {
+): Promise<{ data: PrescriptionRedemptionDtoOut }> => {
   try {
-    const response = await axios.post<PrescriptionRedemptionDtoOut>(API_URL, payload, {
+    const response = await axios.post<{ data: PrescriptionRedemptionDtoOut }>(API_URL, payload, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-    return response.data;
+    return response.data; // Mengembalikan respons penuh
   } catch (error) {
     console.error('Error creating prescription redemption:', error);
     throw new Error('Failed to create prescription redemption');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -9,20 +9,21 @@ import {
   MenuItem,
 } from '@mui/material';
 import toast from 'react-hot-toast';
+import { createTransaction } from 'service/transaction.service';
+import { createTransactionDetail } from 'service/transaction.detail.service';
+import { ProductDtoOut } from 'Dto/product/product.dto';
+import { useNavigate } from 'react-router-dom';
 import {
   PaymentMethod,
   CreateTransactionDto,
   TransactionType,
   CategoryType,
 } from 'Dto/transaction/transaction.dto';
-import { createTransaction } from 'service/transaction.service';
-import { createTransactionDetail } from 'service/transaction.detail.service';
-import { ProductDtoOut } from 'Dto/product/product.dto';
-import SuccessTransactionDialog from './succes.transaction';
 
 interface SelectedProduct extends ProductDtoOut {
   quantity: number;
   note: string;
+  sellingPrice: number;
 }
 
 interface PaymentPopupProps {
@@ -30,6 +31,7 @@ interface PaymentPopupProps {
   onClose: () => void;
   grandTotal: number;
   paymentDetails: {
+    tax: number;
     paymentMethod: string;
     amount: number;
     change: number;
@@ -44,6 +46,7 @@ interface PaymentPopupProps {
     }>
   >;
   onPaymentConfirmed: (paymentData: {
+    tax: number;
     change: any;
     amount: any;
     paymentMethod: string;
@@ -51,7 +54,7 @@ interface PaymentPopupProps {
   }) => void;
   userId: string | null;
   selectedProducts: SelectedProduct[];
-  transactionType: TransactionType; // Make transaction type dynamic (e.g., Generic or Prescription)
+  transactionType: TransactionType;
 }
 
 const PaymentPopup: React.FC<PaymentPopupProps> = ({
@@ -60,15 +63,32 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   grandTotal,
   paymentDetails,
   setPaymentDetails,
-  onPaymentConfirmed,
   userId,
   selectedProducts,
   transactionType,
 }) => {
   const [isTransactionSuccess, setIsTransactionSuccess] = React.useState(false);
+  const navigate = useNavigate(); // Initialize navigate function
+
+  // Calculate tax (example: 10% of grand total)
+  const calculateTax = (total: number): number => {
+    const taxRate = 0.1;
+    return total * taxRate;
+  };
+
+  const handleCloseAndNavigate = (transactionId: number) => {
+    // Tutup dialog popup
+    onClose();
+
+    // Jeda sebelum navigasi, beri waktu untuk animasi dialog
+    setTimeout(() => {
+      // Arahkan ke halaman detail transaksi
+      navigate(`/transactions/history/${transactionId}`);
+    }, 300); // 300ms untuk memberi waktu animasi
+  };
 
   const handleConfirmPayment = async () => {
-    // Basic validation
+    // Validasi awal
     if (!paymentDetails.paymentMethod) {
       toast.error('Please select a payment method.');
       return;
@@ -84,48 +104,52 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
       return;
     }
 
-    // Transaction payload with dynamic transaction type
+    // Hitung pajak
+    const taxAmount = calculateTax(grandTotal);
+
+    // Siapkan payload transaksi
     const transactionPayload: CreateTransactionDto = {
       paymentMethod: paymentDetails.paymentMethod as PaymentMethod,
       note: paymentDetails.note,
       transactionDate: new Date(),
-      userId: userId,
-      transactionType: transactionType,
+      userId,
+      transactionType,
       categoryType: CategoryType.OUT,
-      id: 0,
-      tax: 0,
-      subTotal: 0,
-      grandTotal: grandTotal,
-      items: [],
+      id: 0, // ID dihasilkan oleh server
+      tax: taxAmount,
+      subTotal: selectedProducts.reduce(
+        (total, product) => total + product.quantity * product.sellingPrice,
+        0,
+      ),
+      grandTotal,
+      items: selectedProducts.map((product) => ({
+        productId: product.id,
+        quantity: product.quantity,
+        note: product.note,
+        price: product.sellingPrice,
+      })),
     };
 
     try {
-      // Create the main transaction
+      // Kirim data transaksi ke server
       const createdTransaction = await createTransaction(transactionPayload);
+
       if (createdTransaction?.id) {
-        // Create transaction details for each product
+        // Kirim detail transaksi
         await Promise.all(
           selectedProducts.map((product) =>
             createTransactionDetail({
               productId: product.id,
               quantity: product.quantity,
               note: product.note,
-            })
-          )
+            }),
+          ),
         );
 
-        toast.success('Transaction successfully created!');
-        setIsTransactionSuccess(true);
+        toast.success('Transaction created successfully!');
 
-        // Call the callback to notify parent component (like TransactionForm)
-        onPaymentConfirmed({
-          paymentMethod: paymentDetails.paymentMethod,
-          note: paymentDetails.note,
-          change: undefined,
-          amount: undefined,
-        });
-
-        onClose();
+        // Tutup dialog popup dan arahkan ke halaman transaksi detail
+        handleCloseAndNavigate(createdTransaction.id);
       }
     } catch (error) {
       console.error('Error during transaction creation:', error);
@@ -201,6 +225,7 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
           <Button onClick={onClose}>Cancel</Button>
           <Button
             onClick={handleConfirmPayment}
+            type="submit"
             variant="contained"
             color="primary"
             disabled={!paymentDetails.paymentMethod || paymentDetails.amount < grandTotal}
@@ -209,12 +234,6 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Success Dialog */}
-      <SuccessTransactionDialog
-        open={isTransactionSuccess}
-        onClose={() => setIsTransactionSuccess(false)}
-      />
     </>
   );
 };

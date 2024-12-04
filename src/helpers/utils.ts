@@ -16,3 +16,10 @@ export const currencyFormat = (amount: number, options: Intl.NumberFormatOptions
 export const getTotal = (data: number[]) => {
   return data.reduce((total, current) => total + current, 0);
 };
+
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  }).format(value);
+};

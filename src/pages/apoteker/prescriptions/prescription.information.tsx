@@ -58,7 +58,7 @@ const PrescriptionInformation: React.FC<PrescriptionInformationProps> = ({ presc
 
   return (
     <div>
-      <h2>Prescription Information</h2>
+      <h4>Prescription Information</h4>
       {prescription ? (
         <div
           style={{
