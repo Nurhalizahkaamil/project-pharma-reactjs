@@ -17,23 +17,15 @@ import { createTransaction } from 'service/transaction.service';
 import toast from 'react-hot-toast';
 import { createTransactionDetail } from 'service/transaction.detail.service';
 import { CreateTransactionDetailDto } from 'Dto/transaction/transaction.detail.dto';
+import { useLocation } from 'react-router-dom';
+import { createPrescriptionRedemption } from 'service/redeemtion.service';
+import { CreatePrescriptionRedemptionDto } from 'Dto/prescriptions/redeemtion.dto';
 
 interface SelectedProduct extends ProductDtoOut {
   quantity: number;
   subtotal: number;
   note: string;
 }
-
-let transactionCounter = 1; // Menyimpan urutan transaksi (dimulai dari 001)
-
-const generateTransactionCode = () => {
-  const today = new Date();
-  const datePart = today.toISOString().split('T')[0].replace(/-/g, '');
-  const transactionCode = `TRX-${datePart}-${transactionCounter.toString().padStart(3, '0')}`;
-  transactionCounter++;
-
-  return transactionCode;
-};
 
 const GenericTransactionForm: React.FC = () => {
   const [productSearch, setProductSearch] = useState('');
@@ -63,6 +55,19 @@ const GenericTransactionForm: React.FC = () => {
     paymentMethod: PaymentMethod.CASH,
     items: [],
   });
+
+  const { prescriptionId } = useLocation().state || {}; // Get prescriptionId from parent
+
+  useEffect(() => {
+    if (prescriptionId) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        prescriptionId,
+        isPaid: true,
+        isRedeem: true, // Set redeem flag to true for redemption transactions
+      }));
+    }
+  }, [prescriptionId]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -96,7 +101,7 @@ const GenericTransactionForm: React.FC = () => {
   useEffect(() => {
     if (productSearch.trim()) {
       const filtered = products.filter((product) =>
-        product.name.toLowerCase().includes(productSearch.toLowerCase()),
+        product.productCode.toLowerCase().includes(productSearch.toLowerCase()),
       );
       setFilteredProducts(filtered);
     } else {
@@ -150,7 +155,7 @@ const GenericTransactionForm: React.FC = () => {
   };
 
   const calculateTax = () => {
-    return selectedProducts.reduce((sum, product) => sum + product.subtotal, 0) * 0.1;
+    return selectedProducts.reduce((sum, product) => sum + product.sellingPrice, 0) * 0.1;
   };
 
   const calculateGrandTotal = () => {
@@ -185,7 +190,7 @@ const GenericTransactionForm: React.FC = () => {
 
     // Map to CreateTransactionDetailDto
     const validItems: CreateTransactionDetailDto[] = selectedProducts.map((product) => ({
-      productId: product.id, // Ambil ID saja, sesuai dengan tipe CreateTransactionDetailDto
+      productId: product.id, 
       quantity: product.quantity,
       note: product.note,
     }));
@@ -201,7 +206,7 @@ const GenericTransactionForm: React.FC = () => {
       tax,
       subTotal,
       grandTotal,
-      items: validItems, // Gunakan validItems dengan tipe CreateTransactionDetailDto
+      items: validItems, 
     };
 
     setFormData(transactionData);
@@ -209,7 +214,7 @@ const GenericTransactionForm: React.FC = () => {
   };
 
   const handleShow = () => {
-    console.log('Proceed to Payment clicked'); // Debugging
+    console.log('Proceed to Payment clicked'); 
     setIsPaymentPopupOpen(true);
 
     const isValid = validateTransactionData();
@@ -237,14 +242,15 @@ const GenericTransactionForm: React.FC = () => {
     };
 
     try {
-      const response = await createTransaction(transactionData); // Kirim ke TransactionService
+      // Kirim ke TransactionService
+      const response = await createTransaction(transactionData);
       if (response?.data) {
         const transactionId = response.data.id;
 
         // Kirim items ke TransactionDetailService
         const detailPromises = selectedProducts.map((item) =>
           createTransactionDetail({
-            productId: item.id, // Gunakan id produk
+            productId: item.id,
             quantity: item.quantity,
             note: item.note,
           }),
@@ -252,9 +258,28 @@ const GenericTransactionForm: React.FC = () => {
 
         await Promise.all(detailPromises);
 
+        // Tambahkan logika khusus untuk prescription
+        // if (transactionData.transactionType === TransactionType.PRESCRIPTION && prescriptionId) {
+        //   // Simpan ke prescription_redeemptions
+        //   const prescriptionData: CreatePrescriptionRedemptionDto = {
+        //     prescriptionId,
+        //     transaction: transactionId, // Menggunakan data transaksi
+        //     isPaid: true,
+        //     isRedeem: true,
+        //   };
+
+        //   // Kirim data ke table Prescription Redemptions
+        //   const prescriptionResponse = await createPrescriptionRedemption(prescriptionData);
+        //   if (prescriptionResponse?.data) {
+        //     toast.success('Prescription redemption created successfully!');
+        //   } else {
+        //     throw new Error('Failed to create prescription redemption.');
+        //   }
+        // }
+
         toast.success('Transaction created successfully!');
         setSelectedProducts([]);
-        setIsPaymentPopupOpen(false);
+        closePaymentPopup(); // Tutup popup
       } else {
         toast.error('Failed to create transaction.');
       }
@@ -265,11 +290,12 @@ const GenericTransactionForm: React.FC = () => {
   };
 
   const closePaymentPopup = () => {
-    setIsPaymentPopupOpen(false);
+    console.log('Closing payment popup');
+    setIsPaymentPopupOpen(false); // Tutup popup
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1000px', marginTop: '-80px' }}>
+    <div style={{ padding: '20px', maxWidth: '1000px', marginTop: '-60px' }}>
       <TextField
         placeholder="Search product name here"
         value={productSearch}
@@ -435,9 +461,10 @@ const GenericTransactionForm: React.FC = () => {
         <PaymentPopup
           open={isPaymentPopupOpen}
           onClose={closePaymentPopup}
-          grandTotal={calculateGrandTotal()}
+          grandTotal={calculateGrandTotal()} 
           paymentDetails={{
             ...paymentDetails,
+            tax: calculateTax(), 
           }}
           setPaymentDetails={setPaymentDetails}
           userId={getCurrentUserId()}
@@ -447,6 +474,7 @@ const GenericTransactionForm: React.FC = () => {
             const relevantData = {
               paymentMethod: paymentData.paymentMethod,
               note: paymentData.note,
+              tax: paymentData.tax, // Pastikan tax ada
               amount: paymentData.amount,
               change: paymentData.change,
             };

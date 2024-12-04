@@ -1,6 +1,4 @@
-import { create } from '@mui/material/styles/createTransitions';
-import ChooseTransactionPage from 'pages/apoteker/transactions/choose.transactionspages';
-import PaymentPopup from 'pages/apoteker/transactions/payment';
+import { getTransactionById } from "service/transaction.service";
 
 export const rootPaths = {
   root: '/',
@@ -34,6 +32,7 @@ export const rootPaths = {
   transactionspayment: 'transactions/prescriptionconfirmpay/:id',
   generictransaction: 'transactions/generaltransaction',
   PaymentPopup: 'transactions/payment',
+  getTransactionById: 'transactions/history/:id',
   prescription: 'prescriptions',
   createPrescription: 'prescriptions/create',
   reportgenerictransaction: 'report/generictransaction',
@@ -73,6 +72,7 @@ export default {
   prescription: `/${rootPaths.prescription}`,
   createPrescription: `/${rootPaths.createPrescription}`,
   PaymentPopup: `/${rootPaths.PaymentPopup}`,
+  getTransactionById: `/${rootPaths.getTransactionById}`,
   reportgenerictransaction: `/${rootPaths.reportgenerictransaction}`,
   reportprescription: `/${rootPaths.reportprescription}`,
 };

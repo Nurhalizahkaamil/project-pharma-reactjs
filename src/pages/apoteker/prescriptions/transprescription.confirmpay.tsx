@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PrescriptionDtoOut } from 'Dto/prescriptions/prescription.dto';
-import { getPrescriptionById } from 'service/precription.service'; // Make sure the service path is correct
-import PrescriptionInformation from './prescription.information'; // Make sure this import is correct
-import TransactionForm from '../prescriptions/redeem.transactionpres'; // Make sure this import is correct
+import { getPrescriptionById } from 'service/precription.service';
+import PrescriptionInformation from './prescription.information';
+import GenericTransactionForm from '../generic/generic.transaction'; // Menambahkan GenericTransactionForm
 
 const TransactionPrescriptionForm: React.FC = () => {
   const location = useLocation();
-  const { prescriptionId } = location.state || {}; // Assuming prescriptionId comes from the route's state
+  const { prescriptionId } = location.state || {}; // Mengambil prescriptionId dari state
   const [prescription, setPrescription] = useState<PrescriptionDtoOut | null>(null);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const TransactionPrescriptionForm: React.FC = () => {
       if (prescriptionId) {
         try {
           const prescriptionData = await getPrescriptionById(prescriptionId);
-          setPrescription(prescriptionData);
+          setPrescription(prescriptionData); // Menyimpan data resep ke state
         } catch (error) {
           console.error('Error fetching prescription data:', error);
         }
@@ -26,9 +26,17 @@ const TransactionPrescriptionForm: React.FC = () => {
 
   return (
     <div>
-      {/* Pass prescriptionId, not the entire prescription object */}
-      <PrescriptionInformation prescriptionId={prescriptionId} />
-      <TransactionForm />
+      {/* Menampilkan informasi resep */}
+      <div style={{ marginBottom: '40px' }}>
+        <PrescriptionInformation prescriptionId={prescriptionId} />
+      </div>
+
+      {/* Memastikan bahwa transaksi hanya dilakukan jika data resep tersedia */}
+      {prescription && (
+        <div style={{ marginTop: '60px' }}>
+          <GenericTransactionForm />
+        </div>
+      )}
     </div>
   );
 };

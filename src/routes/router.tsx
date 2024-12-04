@@ -26,9 +26,11 @@ import ProductUpdateFormPage from 'pages/admingudang/master product/products/Upd
 import ChooseTransactionPage from 'pages/apoteker/transactions/choose.transactionspages';
 import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
-import TransactionPrescriptionForm from 'pages/apoteker/transactions/transprescription.confirmpay';
+import TransactionPrescriptionForm from 'pages/apoteker/prescriptions/transprescription.confirmpay';
 import GeneralTransactionForm from 'pages/apoteker/generic/generic.transaction';
 import PaymentPopup from 'pages/apoteker/transactions/payment';
+import Invoice from 'pages/apoteker/generic/invoice.generic';
+import HistoryPage from 'pages/apoteker/generic/invoice.generic';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -273,6 +275,10 @@ export const routes = [
           {
             path: paths.generictransaction,
             element: <GeneralTransactionForm />,
+          },
+          {
+            path: paths.getTransactionById,
+            element: <HistoryPage />,
           },
         ],
       },
