@@ -31,6 +31,7 @@ import GeneralTransactionForm from 'pages/apoteker/generic/generic.transaction';
 import PaymentPopup from 'pages/apoteker/transactions/payment';
 import Invoice from 'pages/apoteker/generic/invoice.generic';
 import HistoryPage from 'pages/apoteker/generic/invoice.generic';
+import InventoryFormPage from 'pages/admingudang/master inventory/inventory/FormInventory';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -184,6 +185,14 @@ export const routes = [
             path: paths.inventories,
             element: <InventoriesPage />,
           },
+          {
+            path: paths.createInventory,
+            element: <InventoryFormPage />,
+          },
+          // {
+          //   path: paths.updateInventory,
+          //   element: <InventoriesPage />,
+          // },
         ],
       },
       {

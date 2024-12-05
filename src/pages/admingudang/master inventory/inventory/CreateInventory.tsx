@@ -1,10 +1,18 @@
 import React from 'react';
 import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import paths from 'routes/paths';
 
 const CreateInventoriesButton = () => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    console.log('Button clicked!'); // Debugging klik tombol
+    navigate(paths.createInventory); // Pastikan rute yang benar
+  };
   return (
     <Button
       variant="contained"
+      onClick={handleClick}
       sx={{
         marginBottom: 2,
         backgroundColor: '#76C89A', // Ganti dengan kode warna hijau yang diinginkan
@@ -15,7 +23,7 @@ const CreateInventoriesButton = () => {
         },
       }}
     >
-      + Create Inventories
+      + Manage Inventories
     </Button>
   );
 };
