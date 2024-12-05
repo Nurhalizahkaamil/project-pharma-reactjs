@@ -37,4 +37,10 @@ export interface CreateProductDto {
   drugClass?: DrugClass;
 }
 
+export interface ProductResponse {
+  message: string;
+  statusCode: number;
+  data: ProductDtoOut[];
+}
+
 export type UpdateProductDto = Partial<CreateProductDto>;

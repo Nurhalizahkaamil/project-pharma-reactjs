@@ -8,126 +8,227 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
+  IconButton,
   TableFooter,
   TablePagination,
+  Snackbar,
+  Alert,
 } from '@mui/material';
-import axios from 'axios';
+import { InventoryDtoOut } from 'Dto/inventories/inventory.dto';
+import { ProductDtoOut } from 'Dto/product/product.dto';
+import { useNavigate } from 'react-router-dom';
+import { getProducts, deleteInventory } from 'service/inventory.service';
+import DeleteIcon from 'assets/trash.png';
+import EditIcon from 'assets/edit.png';
+import ConfirmationDialog from 'components/common/ConfirmationDelete';
 
-// Definisikan interface untuk Inventories
-interface Inventories {
-  id: string;
-  name: string;
-  description: string;
-  status: string;
+interface InventoryTableProps {
+  tableData: InventoryDtoOut[];
+  handleEdit: (id: number) => void;
+  handleDelete: (id: number) => Promise<void>;
+  currentPage: number;
+  totalItems: number;
+  totalPages?: number;
+  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  itemsPerPage: number;
+  handlePageChange: (page: number) => void;
 }
 
-const InventoriesTable = () => {
-  const [inventories, setInventories] = useState<Inventories[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
+const InventoriesTable: React.FC<InventoryTableProps> = ({
+  tableData,
+  handleDelete,
+  currentPage,
+  totalItems,
+  setItemsPerPage,
+  itemsPerPage,
+  handlePageChange,
+}) => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedInventoryId, setSelectedInventoryId] = useState<number | null>(null);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [products, setProducts] = useState<Map<number, string>>(new Map());
 
   useEffect(() => {
-    const fetchInventories = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get('/api/inventories'); // Ganti dengan endpoint API Anda
-        setInventories(response.data); // Perbaikan: setInventories, bukan memanggil fetchInventories lagi
-        setTotalItems(response.data.length); // Set total items
+        const response = await getProducts(); // Get data from the API
+        const productsMap = new Map<number, string>();
+  
+        // Assuming response.data is an array of ProductDtoOut objects
+        response.data.forEach((product: ProductDtoOut) => {
+          productsMap.set(product.id, product.name); // or whatever properties exist on ProductDtoOut
+        });
+  
+        setProducts(productsMap); // Set the products as a Map
       } catch (error) {
-        console.error('Error fetching Inventories:', error);
+        console.error('Failed to fetch suppliers:', error);
       }
     };
-
-    fetchInventories(); // Panggil fungsi tanpa argumen
+  
+    fetchProducts();
   }, []);
+  
 
-  const handleEdit = (_id: string) => {
-    // Logika untuk edit inventories
+  const openDeleteModal = (id: number) => {
+    setSelectedInventoryId(id);
+    setIsModalOpen(true);
   };
 
-  const handleDelete = (_id: string) => {
-    // Logika untuk delete inventories
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedInventoryId(null);
   };
 
-  const handlePageChange = (_event: unknown, newPage: number) => {
-    setCurrentPage(newPage);
+  const confirmDelete = async () => {
+    if (selectedInventoryId) {
+      try {
+        await deleteInventory(selectedInventoryId);
+        await handleDelete(selectedInventoryId);
+        setIsModalOpen(false);
+        setIsSnackbarOpen(true);
+      } catch (error) {
+        console.error('Failed to delete inventory:', error);
+      }
+    }
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setItemsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(0);
+  const handleCloseSnackbar = () => {
+    setIsSnackbarOpen(false);
+  };
+
+  const handleEditClick = (id: number) => {
+    navigate(`/masterinventory/inventory/${id}`);
   };
 
   return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'white' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                ID
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Name
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Description
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Status
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
-                Actions
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {inventories.length > 0 ? (
-            inventories
-              .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-              .map((inventories) => (
-                <TableRow key={inventories.id}>
-                  <TableCell>{inventories.id}</TableCell>
-                  <TableCell>{inventories.name}</TableCell>
-                  <TableCell>{inventories.description}</TableCell>
-                  <TableCell>{inventories.status}</TableCell>
+    <Paper>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  No
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Date
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Name of product
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Quantity
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Note for Items
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Note for Inventory
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Inventory Type
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Reason
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: '#4a4a4a' }}>
+                  Actions
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tableData.length > 0 ? (
+              tableData.map((inventory, index) => (
+                <TableRow key={inventory.id}>
+                  {/* Nomor Urut */}
+                  <TableCell>{index + 1 + (currentPage - 1) * itemsPerPage}</TableCell>
+
+                  {/* Tanggal Inventaris */}
                   <TableCell>
-                    <Button onClick={() => handleEdit(inventories.id)}>Edit</Button>
-                    <Button onClick={() => handleDelete(inventories.id)}>Delete</Button>
+                    {new Date(inventory.inventoryDate).toISOString().split('T')[0]}
+                  </TableCell>
+
+                  {/* Nama Produk */}
+                  <TableCell>
+                  {inventory.items.map(item => item.product.name).join(', ')}
+                  </TableCell>
+                  <TableCell>{inventory.items.map((item) => item.qtyItem).join(', ')}</TableCell>
+                  <TableCell>{inventory.items.map((item) => item.noteItem).join(', ')}</TableCell>
+                  <TableCell>{inventory.note}</TableCell>
+                  <TableCell>{inventory.inventoryType}</TableCell>
+                  <TableCell>{inventory.reasonType}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleEditClick(inventory.id)}
+                      color="primary"
+                      aria-label="edit"
+                    >
+                      <img src={EditIcon} alt="edit icon" width="24" height="24" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openDeleteModal(inventory.id)}
+                      color="secondary"
+                      aria-label="delete"
+                    >
+                      <img src={DeleteIcon} alt="delete icon" width="24" height="24" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
-          ) : (
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} align="center">
+                  <Typography>No inventories available.</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+
+          <TableFooter>
             <TableRow>
-              <TableCell colSpan={10} align="center">
-                <Typography>No Inventories available.</Typography>
-              </TableCell>
+              <TablePagination
+                count={totalItems}
+                page={currentPage - 1}
+                onPageChange={(_, newPage) => handlePageChange(newPage + 1)}
+                rowsPerPage={itemsPerPage}
+                onRowsPerPageChange={(event) => setItemsPerPage(parseInt(event.target.value, 10))}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              count={totalItems}
-              page={currentPage}
-              onPageChange={handlePageChange}
-              rowsPerPage={itemsPerPage}
-              onRowsPerPageChange={handleRowsPerPageChange}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+
+      <ConfirmationDialog
+        open={isModalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+        title={''}
+      />
+
+      <Snackbar open={isSnackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Inventory deleted successfully!
+        </Alert>
+      </Snackbar>
+    </Paper>
   );
 };
 

@@ -1,4 +1,5 @@
-import { getTransactionById } from "service/transaction.service";
+import { create } from 'domain';
+import { getTransactionById } from 'service/transaction.service';
 
 export const rootPaths = {
   root: '/',
@@ -18,6 +19,8 @@ export const rootPaths = {
   createWarehouse: 'master-inventory/warehouse/create',
   updateWarehouse: 'master-inventory/warehouse/update/:id',
   inventories: 'master-inventory/inventories',
+  createInventory: 'master-inventory/inventories/create',
+  updateInventory: 'master-inventory/inventories/update/:id',
   suppliers: 'master-data/suppliers',
   createSupplier: 'master-data/suppliers/create',
   updateSupplier: 'master-data/suppliers/update/:id',
@@ -56,6 +59,8 @@ export default {
   createWarehouse: `/${rootPaths.createWarehouse}`,
   updateWarehouse: `/${rootPaths.updateWarehouse}`,
   inventories: `/${rootPaths.inventories}`,
+  createInventory: `/${rootPaths.createInventory}`,
+  updateInventory: `/${rootPaths.updateInventory}`,
   suppliers: `/${rootPaths.suppliers}`,
   createSupplier: `/${rootPaths.createSupplier}`,
   updateSupplier: `/${rootPaths.updateSupplier}`,
