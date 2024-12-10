@@ -223,7 +223,7 @@ const ProductsTable: React.FC<ProductsTableProps> = ({
         open={isModalOpen}
         onClose={closeModal}
         onConfirm={confirmDelete}
-        title="Delete Product"
+        title="Do you want to delete this product?"
       />
 
       <Snackbar open={isSnackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>

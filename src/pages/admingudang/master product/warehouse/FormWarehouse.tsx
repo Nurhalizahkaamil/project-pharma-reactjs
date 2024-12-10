@@ -77,7 +77,7 @@ const WarehouseFormPage: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
-    navigate('/master-inventory/warehouse');
+    navigate('/master-data/warehouse');
   };
 
   return (

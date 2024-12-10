@@ -63,7 +63,7 @@ const WelcomePage: React.FC = () => {
             marginBottom: '1rem',
           }}
         >
-          INVENTORY SYSTEM APPLICATIONS
+          MEDICAL PHARMACY INVENTORY APPLICATIONS
         </Typography>
         <Button
           variant="contained"

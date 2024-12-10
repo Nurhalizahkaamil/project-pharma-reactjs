@@ -4,7 +4,7 @@ import paths, { rootPaths } from './paths';
 import PageLoader from 'components/loading/PageLoader';
 import Progress from 'components/loading/Progress';
 import Dashboard from 'pages/dashboard/Dashboard';
-import WarehousePage from 'pages/admingudang/master inventory/warehouse/WarehousePage';
+import WarehousePage from 'pages/admingudang/master product/warehouse/WarehousePage';
 import InventoriesPage from 'pages/admingudang/master inventory/inventory/InventoriesPages';
 import CategoriesFormPage from 'pages/admingudang/master product/categories/FormCreate';
 import UpdateCategoryForm from 'pages/admingudang/master product/categories/UpdateCategories';
@@ -13,14 +13,14 @@ import UpdateUnitsForm from 'pages/admingudang/master product/units/UpdateUnits'
 import SupplierFormPage from 'pages/admingudang/master data/suppliers/FormSupplier';
 import UpdateSupplierForm from 'pages/admingudang/master data/suppliers/UpdateSupplier';
 import SuppliersPage from 'pages/admingudang/master data/suppliers/SupplierPages';
-import WarehouseFormPage from 'pages/admingudang/master inventory/warehouse/FormWarehouse';
+import WarehouseFormPage from 'pages/admingudang/master product/warehouse/FormWarehouse';
 import DoctorsPage from 'pages/admingudang/master data/doctor/DoctorPage';
 import DoctorFormPage from 'pages/admingudang/master data/doctor/FormDoctor';
 import CustomerFormPage from 'pages/admingudang/master data/customer/FormCustomer';
 import CustomersPage from 'pages/admingudang/master data/customer/CustomerPage';
 import UpdateCustomerForm from 'pages/admingudang/master data/customer/UpdateCustomer';
 import UpdateDoctorForm from 'pages/admingudang/master data/doctor/UpdateDoctor';
-import UpdateWarehouse from 'pages/admingudang/master inventory/warehouse/UpdateWarehouse';
+import UpdateWarehouse from 'pages/admingudang/master product/warehouse/UpdateWarehouse';
 import ProductFormPage from 'pages/admingudang/master product/products/FormProduct';
 import ProductUpdateFormPage from 'pages/admingudang/master product/products/UpdateProducts';
 import ChooseTransactionPage from 'pages/apoteker/transactions/choose.transactionspages';
@@ -28,10 +28,12 @@ import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 import PrescriptionForm from 'pages/apoteker/prescriptions/form.addprescription';
 import TransactionPrescriptionForm from 'pages/apoteker/prescriptions/transprescription.confirmpay';
 import GeneralTransactionForm from 'pages/apoteker/generic/generic.transaction';
-import PaymentPopup from 'pages/apoteker/transactions/payment';
+import PaymentPopup from 'pages/apoteker/transactions/transpayment';
 import Invoice from 'pages/apoteker/generic/invoice.generic';
 import HistoryPage from 'pages/apoteker/generic/invoice.generic';
 import InventoryFormPage from 'pages/admingudang/master inventory/inventory/FormInventory';
+import InventoryUpdateFormPage from 'pages/admingudang/master inventory/inventory/UpdateInventory';
+import TransactionHistoryTable from 'pages/apoteker/transactions/report.transactions';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -189,11 +191,32 @@ export const routes = [
             path: paths.createInventory,
             element: <InventoryFormPage />,
           },
-          // {
-          //   path: paths.updateInventory,
-          //   element: <InventoriesPage />,
-          // },
+          {
+            path: paths.updateInventory,
+            element: <InventoryUpdateFormPage />,
+          },
         ],
+      },
+      {
+        path: rootPaths.stockopname,
+        element: (
+          <MainLayout title="Stock Opname">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </MainLayout>
+        ),
+        // children: [
+        //  ?
+        //   // {
+        //   //   path: paths.createSupplier,
+        //   //   element: <SupplierFormPage />,
+        //   // },
+        //   // {
+        //   //   path: paths.updateSupplier,
+        //   //   element: <UpdateSupplierForm />,
+        //   // },
+        // ],
       },
       {
         path: rootPaths.suppliers,
@@ -324,19 +347,9 @@ export const routes = [
       {
         path: rootPaths.reportgenerictransaction,
         element: (
-          <MainLayout title="Report Generic Transactions">
+          <MainLayout title="Report Transactions">
             <Suspense fallback={<PageLoader />}>
-              <Outlet />
-            </Suspense>
-          </MainLayout>
-        ),
-      },
-      {
-        path: rootPaths.reportprescription,
-        element: (
-          <MainLayout title="Report Prescription Transaction">
-            <Suspense fallback={<PageLoader />}>
-              <Outlet />
+              <TransactionHistoryTable />
             </Suspense>
           </MainLayout>
         ),

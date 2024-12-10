@@ -2,7 +2,9 @@ import { ProductDtoOut } from 'Dto/product/product.dto'; // Import TransactionDt
 
 export interface TransactionDetailDtoOut {
   id?: number;
+  product: ProductDtoOut;
   productId: number;
+  productName: string;
   quantity: number;
   note: string;
 }
@@ -10,6 +12,7 @@ export interface TransactionDetailDtoOut {
 // Input interface for creating a new transaction detail (this is the data you need to send in the request)
 export interface CreateTransactionDetailDto {
   productId: number;
+  productName: string;
   quantity: number;
   note: string;
 }

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { PrescriptionDtoOut } from 'Dto/prescriptions/prescription.dto';
 import { getPrescriptionById } from 'service/precription.service';
 import PrescriptionInformation from './prescription.information';
-import GenericTransactionForm from '../generic/generic.transaction'; // Menambahkan GenericTransactionForm
+import PrescriptionTransactionForm from '../transactions/prescrippayment';
 
 const TransactionPrescriptionForm: React.FC = () => {
   const location = useLocation();
@@ -34,7 +34,7 @@ const TransactionPrescriptionForm: React.FC = () => {
       {/* Memastikan bahwa transaksi hanya dilakukan jika data resep tersedia */}
       {prescription && (
         <div style={{ marginTop: '60px' }}>
-          <GenericTransactionForm />
+          <PrescriptionTransactionForm />
         </div>
       )}
     </div>

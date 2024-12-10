@@ -182,7 +182,7 @@ const WarehousesTable: React.FC<WarehousesTableProps> = ({
         open={isModalOpen}
         onClose={closeModal}
         onConfirm={confirmDelete}
-        title={''}
+        title={'Do you want to delete this warehouse?'}
       />
 
       <Snackbar open={isSnackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>

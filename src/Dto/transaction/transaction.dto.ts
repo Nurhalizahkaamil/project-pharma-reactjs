@@ -28,7 +28,7 @@ export interface TransactionDtoOut {
   subTotal: number;
   grandTotal: number;
   paymentMethod?: PaymentMethod;
-  items: CreateTransactionDetailDto[];
+  items: TransactionDetailDtoOut[];
 }
 
 export interface CreateTransactionDto {
@@ -42,7 +42,7 @@ export interface CreateTransactionDto {
   subTotal: number;
   grandTotal: number;
   paymentMethod?: PaymentMethod;
-  items: TransactionDetailDtoOut[];
+  items: CreateTransactionDetailDto[];
 }
 
 export type UpdateTransactionDto = Partial<CreateTransactionDto>;
