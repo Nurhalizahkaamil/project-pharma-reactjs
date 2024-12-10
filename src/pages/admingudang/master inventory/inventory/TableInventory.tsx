@@ -98,7 +98,7 @@ const InventoriesTable: React.FC<InventoryTableProps> = ({
   };
 
   const handleEditClick = (id: number) => {
-    navigate(`/masterinventory/inventory/${id}`);
+    navigate(`/master-inventory/inventories/update/${id}`);
   };
 
   return (
@@ -220,7 +220,7 @@ const InventoriesTable: React.FC<InventoryTableProps> = ({
         open={isModalOpen}
         onClose={closeModal}
         onConfirm={confirmDelete}
-        title={''}
+        title={'Do you want to delete this inventory?'}
       />
 
       <Snackbar open={isSnackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>

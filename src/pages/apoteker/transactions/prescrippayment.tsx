@@ -27,7 +27,7 @@ interface SelectedProduct extends ProductDtoOut {
   note: string;
 }
 
-const GenericTransactionForm: React.FC = () => {
+const PrescriptionTransactionForm: React.FC = () => {
   const [productSearch, setProductSearch] = useState('');
   const [products, setProducts] = useState<ProductDtoOut[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductDtoOut[]>([]);
@@ -256,7 +256,7 @@ const GenericTransactionForm: React.FC = () => {
 
         await Promise.all(detailPromises);
 
-        //Tambahkan logika khusus untuk prescription
+        // Tambahkan logika khusus untuk prescription
         if (transactionData.transactionType === TransactionType.PRESCRIPTION && prescriptionId) {
           // Simpan ke prescription_redeemptions
           const prescriptionData: CreatePrescriptionRedemptionDto = {
@@ -282,14 +282,13 @@ const GenericTransactionForm: React.FC = () => {
         toast.error('Failed to create transaction.');
       }
     } catch (error) {
-      console.error('Error during transaction:', error);
-      toast.error('Failed to create transaction.');
+      console.error('Error during transaction creation:', error);
+      toast.error('Transaction failed. Please try again.');
     }
   };
 
   const closePaymentPopup = () => {
-    console.log('Closing payment popup');
-    setIsPaymentPopupOpen(false); // Tutup popup
+    setIsPaymentPopupOpen(false);
   };
 
   return (
@@ -448,6 +447,7 @@ const GenericTransactionForm: React.FC = () => {
         Proceed to Payment
       </Button>
 
+      {/* Confirmation Dialog for Deletion */}
       <ConfirmationDialog
         open={openDialog}
         onClose={closeDialog}
@@ -455,6 +455,7 @@ const GenericTransactionForm: React.FC = () => {
         title={'Are you sure you want to delete this prescription transactions?'}
       />
 
+      {/* Payment Modal */}
       {isPaymentPopupOpen && (
         <PaymentPopup
           open={isPaymentPopupOpen}
@@ -467,7 +468,7 @@ const GenericTransactionForm: React.FC = () => {
           setPaymentDetails={setPaymentDetails}
           userId={getCurrentUserId()}
           selectedProducts={selectedProducts}
-          transactionType={TransactionType.GENERIC}
+          transactionType={TransactionType.PRESCRIPTION}
           onPaymentConfirmed={(paymentData) => {
             const relevantData = {
               paymentMethod: paymentData.paymentMethod,
@@ -485,4 +486,4 @@ const GenericTransactionForm: React.FC = () => {
   );
 };
 
-export default GenericTransactionForm;
+export default PrescriptionTransactionForm;
