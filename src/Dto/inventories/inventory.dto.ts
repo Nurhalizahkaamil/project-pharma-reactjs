@@ -13,7 +13,7 @@ export type ReasonType =
 
 // DTO untuk output data inventaris
 export interface InventoryDtoOut {
-  productId(productId: any): string;
+  productId: number;
   id: number; 
   inventoryDate: string; 
   inventoryType: InventoryType; 

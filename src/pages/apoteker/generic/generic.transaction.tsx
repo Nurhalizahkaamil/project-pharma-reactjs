@@ -191,7 +191,7 @@ const GenericTransactionForm: React.FC = () => {
     // Map to CreateTransactionDetailDto
     const validItems: CreateTransactionDetailDto[] = selectedProducts.map((product) => ({
       productId: product.id,
-      productName: product.name, // Add this line to include the product name
+      productName: product.name,
       quantity: product.quantity,
       note: product.note,
     }));
@@ -214,9 +214,13 @@ const GenericTransactionForm: React.FC = () => {
     return true;
   };
 
-  const openPaymentModal = () => {
+  const handleShow = () => {
     console.log('Proceed to Payment clicked');
     setIsPaymentPopupOpen(true);
+
+    const isValid = validateTransactionData();
+    if (!isValid) return;
+
     setPaymentDetails({
       paymentMethod: PaymentMethod.CASH,
       amount: 0,
@@ -248,36 +252,36 @@ const GenericTransactionForm: React.FC = () => {
         const detailPromises = selectedProducts.map((item) =>
           createTransactionDetail({
             productId: item.id,
+            productName: item.name,
             quantity: item.quantity,
             note: item.note,
-            productName: '',
           }),
         );
 
         await Promise.all(detailPromises);
 
-        //Tambahkan logika khusus untuk prescription
-        if (transactionData.transactionType === TransactionType.PRESCRIPTION && prescriptionId) {
-          // Simpan ke prescription_redeemptions
-          const prescriptionData: CreatePrescriptionRedemptionDto = {
-            prescriptionId,
-            transaction: transactionId, // Menggunakan data transaksi
-            isPaid: true,
-            isRedeem: true,
-          };
+        // //Tambahkan logika khusus untuk prescription
+        // if (transactionData.transactionType === TransactionType.PRESCRIPTION && prescriptionId) {
+        //   // Simpan ke prescription_redeemptions
+        //   const prescriptionData: CreatePrescriptionRedemptionDto = {
+        //     prescriptionId,
+        //     transaction: transactionId, // Menggunakan data transaksi
+        //     isPaid: true,
+        //     isRedeem: true,
+        //   };
 
-          // Kirim data ke table Prescription Redemptions
-          const prescriptionResponse = await createPrescriptionRedemption(prescriptionData);
-          if (prescriptionResponse?.data) {
-            toast.success('Prescription redemption created successfully!');
-          } else {
-            throw new Error('Failed to create prescription redemption.');
-          }
-        }
+        //   // Kirim data ke table Prescription Redemptions
+        //   const prescriptionResponse = await createPrescriptionRedemption(prescriptionData);
+        //   if (prescriptionResponse?.data) {
+        //     toast.success('Prescription redemption created successfully!');
+        //   } else {
+        //     throw new Error('Failed to create prescription redemption.');
+        //   }
+        // }
 
         toast.success('Transaction created successfully!');
-        closePaymentPopup(); // Tutup popup
         setSelectedProducts([]);
+        closePaymentPopup(); // Tutup popup
       } else {
         toast.error('Failed to create transaction.');
       }
@@ -434,7 +438,7 @@ const GenericTransactionForm: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={openPaymentModal}
+        onClick={handleShow}
         style={{
           padding: '10px 20px',
           marginTop: '20px',
