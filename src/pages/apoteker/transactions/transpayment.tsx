@@ -7,9 +7,6 @@ import {
   Button,
   TextField,
   MenuItem,
-  IconButton,
-  Typography,
-  Box,
 } from '@mui/material';
 import toast from 'react-hot-toast';
 import { createTransaction } from 'service/transaction.service';
@@ -22,7 +19,6 @@ import {
   TransactionType,
   CategoryType,
 } from 'Dto/transaction/transaction.dto';
-import CloseIcon from '@mui/icons-material/Close';
 
 interface SelectedProduct extends ProductDtoOut {
   quantity: number;
@@ -71,7 +67,6 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   selectedProducts,
   transactionType,
 }) => {
-  const [isTransactionSuccess, setIsTransactionSuccess] = React.useState(false);
   const navigate = useNavigate(); // Initialize navigate function
 
   // Calculate tax (example: 10% of grand total)
@@ -79,9 +74,7 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
     const taxRate = 0.1;
     return total * taxRate;
   };
-
   const handleCloseAndNavigate = (id: number) => {
-    open = false;
     onClose();
     navigate(`/transactions/generaltransaction/history/${id}`, { state: { transactionId: id } });
   };
@@ -131,7 +124,14 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
     };
 
     try {
-      handleCloseAndNavigate(transactionPayload.id)
+      // Kirim data transaksi ke server
+      const createdTransaction = await createTransaction(transactionPayload);
+      console.log('Transaction created:', createdTransaction.data.id);
+      toast.success('Transaction created successfully!');
+      handleCloseAndNavigate(createdTransaction.data.id);
+      if (createdTransaction?.id) {
+
+      }
     } catch (error) {
       console.error('Error during transaction creation:', error);
       toast.error('Failed to create transaction. Please try again.');
@@ -141,31 +141,13 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
   return (
     <>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: '24px',
-                color: '#0077B6',
-                fontFamily: 'poppins',
-                fontWeight: 'bold',
-                textAlign: 'left',
-                flex: 1,
-              }}
-            >
-              Payment
-            </Typography>
-            <IconButton onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </DialogTitle>
+        <DialogTitle>Payment</DialogTitle>
         <DialogContent>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
             <span>Grand Total:</span>
             <span>Rp {grandTotal.toLocaleString()}</span>
           </div>
+
           <TextField
             label="Amount Received"
             type="number"
@@ -221,6 +203,7 @@ const PaymentPopup: React.FC<PaymentPopupProps> = ({
         </DialogContent>
 
         <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
           <Button
             onClick={handleConfirmPayment}
             type="submit"

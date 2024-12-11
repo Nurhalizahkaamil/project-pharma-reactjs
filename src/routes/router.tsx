@@ -34,6 +34,8 @@ import HistoryPage from 'pages/apoteker/generic/invoice.generic';
 import InventoryFormPage from 'pages/admingudang/master inventory/inventory/FormInventory';
 import InventoryUpdateFormPage from 'pages/admingudang/master inventory/inventory/UpdateInventory';
 import TransactionHistoryTable from 'pages/apoteker/transactions/report.transactions';
+import StockOpnamePage from 'pages/admingudang/master inventory/stock opname/Opnamepages';
+import StockOpnameFormPage from 'pages/admingudang/master inventory/stock opname/FormOpname';
 // import Transactions from 'pages/apoteker/transactions/transactionspages';
 // import PrescriptionsPage from 'pages/apoteker/prescriptions/prescriptionpage';
 // import PrescriptionPage from 'pages/transactions/prescription.pages.';
@@ -206,17 +208,16 @@ export const routes = [
             </Suspense>
           </MainLayout>
         ),
-        // children: [
-        //  ?
-        //   // {
-        //   //   path: paths.createSupplier,
-        //   //   element: <SupplierFormPage />,
-        //   // },
-        //   // {
-        //   //   path: paths.updateSupplier,
-        //   //   element: <UpdateSupplierForm />,
-        //   // },
-        // ],
+        children: [
+          {
+            path: paths.stockopname,
+            element: <StockOpnamePage />,
+          },
+          {
+            path: paths.createStockopname,
+            element: <StockOpnameFormPage />,
+          },
+        ],
       },
       {
         path: rootPaths.suppliers,

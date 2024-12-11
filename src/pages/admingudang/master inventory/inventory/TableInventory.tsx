@@ -62,7 +62,7 @@ const InventoriesTable: React.FC<InventoryTableProps> = ({
   
         setProducts(productsMap); // Set the products as a Map
       } catch (error) {
-        console.error('Failed to fetch suppliers:', error);
+        console.error('Failed to fetch products:', error);
       }
     };
   
@@ -98,7 +98,7 @@ const InventoriesTable: React.FC<InventoryTableProps> = ({
   };
 
   const handleEditClick = (id: number) => {
-    navigate(`/master-inventory/inventories/update/${id}`);
+    navigate(`/manage-inventory/inventories/update/${id}`);
   };
 
   return (
